@@ -5,7 +5,8 @@ import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 
 # Define the scope of the application
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive']
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/spreadsheets',
+         'https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive']
 
 # Add credentials to the account
 creds = ServiceAccountCredentials.from_json_keyfile_name('FantasyCricket-7a5a400ddc86.json', scope)
@@ -25,4 +26,12 @@ print("The column count is " + str(first_sheet.row_count))
 # Print some particular spreadsheet values
 print(first_sheet.cell(2, 2))
 
+# Get all the data in the sheet (in a json string) and view it
+records_data = first_sheet.get_all_records()
+# print(records_data)
 
+# Convert json string to pandas dataframe
+records_df = pd.DataFrame.from_dict(records_data)
+
+# Show first few rows
+print(records_df.head())
