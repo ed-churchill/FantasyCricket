@@ -15,7 +15,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_name('FantasyCricket-7a5a400
 client = gspread.authorize(creds)
 
 # Get the spreadsheet
-sheet = client.open("Copy of commentary data")
+sheet = client.open("FantasyCricket")
 
 # Get the first sheet on the spreadsheet
 first_sheet = sheet.get_worksheet(0)
@@ -33,5 +33,6 @@ records_data = first_sheet.get_all_records()
 # Convert json string to pandas dataframe
 records_df = pd.DataFrame.from_dict(records_data)
 
-# Show first few rows
+# Get the relevant part of the dataframe
+records_df = records_df[['Player Number', 'Player Name', 'Category', 'Squad', 'Price (M)']]
 print(records_df.head())
