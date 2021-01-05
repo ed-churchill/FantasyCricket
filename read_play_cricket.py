@@ -2,9 +2,6 @@
 update a spreadsheet accordingly"""
 
 import pandas as pd
-import bs4 as bs
-import requests
-
 
 def scorecard_to_df(scorecard_url):
     """Function that reads a scorecard from PlayCricket.com and converts it to a Pandas dataframe
@@ -12,10 +9,9 @@ def scorecard_to_df(scorecard_url):
     :param str scorecard_url: The URL of the scorecard on PlayCricket.com
     """
 
-    response = requests.get("https://uniofwarwick.play-cricket.com/website/results/4055612")
-    soup = bs.BeautifulSoup(response.text)
-    table = soup.find('table')
-    print(table)
+    # Find the first batting scorecard
+    data = pd.read_html(scorecard_url)
+
 
 
 
