@@ -5,7 +5,7 @@ import re
 def clean_batting_df(batting_scorecard):
     """Function that cleans the batting scorecard
 
-    :param str batting_scorecard: Warwick's batting scorecard obtained from the function get_tables
+    :param batting_scorecard: Warwick's batting scorecard (as a dataframe) obtained from the function get_tables
     """
     # Rename batting scorecard for ease
     df = batting_scorecard
@@ -51,7 +51,7 @@ def clean_batting_df(batting_scorecard):
 def clean_bowling_df(bowling_scorecard):
     """Function that cleans the bowling scorecard
 
-    :param str bowling_scorecard: Warwick's bowling scorecard obtained from the function get_tables
+    :param bowling_scorecard: Warwick's bowling scorecard (as a dataframe) obtained from the function get_tables
     """
 
     # Rename bowling scorecard for ease
@@ -88,3 +88,20 @@ def get_tables(match_url):
         bowling_scorecard = tables[3]
 
     return batting_scorecard, bowling_scorecard
+
+
+def clean_scorecards(match_url):
+    """Function that returns a tuple of length 2. The first element of the tuple is the cleaned batting scorecard as a
+    dataframe, the second element is a cleaned bowling scorecard as a dataframe
+
+    :param str match_url: The URL of the scorecard on PlayCricket.com
+    """
+
+    # Get the unclean scorecards
+    dirty_batting, dirty_bowling = get_tables(match_url)
+
+    # Clean the scorecards
+    df_bat = clean_batting_df(dirty_batting)
+    df_bowl = clean_bowling_df(dirty_bowling)
+
+    return df_bat, df_bowl
