@@ -67,6 +67,32 @@ def clean_bowling_df(bowling_scorecard):
     return df
 
 
+def clean_fielding_df(oppo_batting_scorecard):
+    """Function that transforms the opposition's batting scorecard into a dataframe containing the mode of dismissal
+    for each wicket
+
+    :param oppo_batting_scorecard: The opposition's batting scorecard (as a dataframe) obtained from the function
+    get_tables
+    """
+
+    # Rename oppo_batting_scorecard for ease
+    df = oppo_batting_scorecard
+
+    # Remove unecessary columns
+    df.drop(df.columns[[0, 3, 4, 5, 6, 7]], axis=1, inplace=True)
+
+    # Name two remaining columns
+    df.rename(columns={'Unnamed: 1': 'Info', 'Unnamed: 2': 'Bowler'})
+
+    # Replace any NaN values with 0s
+    df = df.fillna(0)
+
+    # Delete any lbw rows
+    # df = df[df['Info'] == 'lbw']
+
+    return df
+
+
 def get_tables(match_url):
     """Function that returns a tuple of length 3. The first element of the tuple is the batting scorecard as a
     dataframe (ready for editing), the second element is the bowling scorecard as a dataframe (ready for editing). The
@@ -94,8 +120,9 @@ def get_tables(match_url):
 
 
 def clean_scorecards(match_url):
-    """Function that returns a tuple of length 2. The first element of the tuple is the cleaned batting scorecard as a
-    dataframe, the second element is a cleaned bowling scorecard as a dataframe
+    """Function that returns a tuple of length 3. The first element of the tuple is the cleaned batting scorecard as a
+    dataframe, the second element is a cleaned bowling scorecard as a dataframe. The 3rd elemeent is a dataframe
+    containing the mode of dismissal for each wicket
 
     :param str match_url: The URL of the scorecard on PlayCricket.com
     """
@@ -103,9 +130,9 @@ def clean_scorecards(match_url):
     # Get the unclean scorecards
     dirty_batting, dirty_bowling, dirty_oppo_batting = get_tables(match_url)
 
-    # Clean the scorecards
+    # Clean the batting and bowling scorecards
     df_bat = clean_batting_df(dirty_batting)
     df_bowl = clean_bowling_df(dirty_bowling)
+    df_field = clean_fielding_df(dirty_oppo_batting)
 
-    return df_bat, df_bowl
-
+    return df_bat, df_bowl, df_field
