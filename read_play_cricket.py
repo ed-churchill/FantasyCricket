@@ -68,8 +68,9 @@ def clean_bowling_df(bowling_scorecard):
 
 
 def get_tables(match_url):
-    """Function that returns a tuple of length 2. The first element of the tuple is the batting scorecard as a
-    dataframe (ready for editing), the second element is the bowling scorecard as a dataframe.
+    """Function that returns a tuple of length 3. The first element of the tuple is the batting scorecard as a
+    dataframe (ready for editing), the second element is the bowling scorecard as a dataframe (ready for editing). The
+    third element is the opposition's batting scorecard (ready for editing), which will be used to get fielding stats.
 
     :param str match_url: The URL of the scorecard on PlayCricket.com
     """
@@ -83,11 +84,13 @@ def get_tables(match_url):
     if x == 'y':
         batting_scorecard = tables[1]
         bowling_scorecard = tables[6]
+        oppo_batting_scorecard = tables[4]
     else:
         batting_scorecard = tables[4]
         bowling_scorecard = tables[3]
+        oppo_batting_scorecard = tables[1]
 
-    return batting_scorecard, bowling_scorecard
+    return batting_scorecard, bowling_scorecard, oppo_batting_scorecard
 
 
 def clean_scorecards(match_url):
@@ -98,7 +101,7 @@ def clean_scorecards(match_url):
     """
 
     # Get the unclean scorecards
-    dirty_batting, dirty_bowling = get_tables(match_url)
+    dirty_batting, dirty_bowling, dirty_oppo_batting = get_tables(match_url)
 
     # Clean the scorecards
     df_bat = clean_batting_df(dirty_batting)
