@@ -68,8 +68,7 @@ def clean_bowling_df(bowling_scorecard):
 
 
 def clean_fielding_df(oppo_batting_scorecard):
-    """Function that transforms the opposition's batting scorecard into a dataframe containing the mode of dismissal
-    for each wicket
+    """Function that uses the opposition's batting scorecard to return a dataframe of fielding stats
 
     :param oppo_batting_scorecard: The opposition's batting scorecard (as a dataframe) obtained from the function
     get_tables
@@ -81,14 +80,38 @@ def clean_fielding_df(oppo_batting_scorecard):
     # Remove unecessary columns
     df.drop(df.columns[[0, 3, 4, 5, 6, 7]], axis=1, inplace=True)
 
-    # Name two remaining columns
-    df.rename(columns={'Unnamed: 1': 'Info', 'Unnamed: 2': 'Bowler'})
+    # Remame two remaining columns
+    df.rename(columns={'Unnamed: 1': 'A', 'Unnamed: 2': 'B'}, inplace=True)
 
     # Replace any NaN values with 0s
     df = df.fillna(0)
 
-    # Delete any lbw rows
-    # df = df[df['Info'] == 'lbw']
+    # Delete any lbw rows, not out rows and did not bat rows
+    df = df[df.A != 'lbw']
+    df = df[df.A != 'not out']
+    df = df[df.A != 'did not bat']
+
+    # Delete any rows where the mode of dismissal is bowled
+    for index in df.index:
+        if df['A'][index] == 0 and df['B'][index][0] == 'b':
+            df.drop([index], inplace=True)
+
+    # Get stats on catches, run outs
+    fielding_stats = {}
+    for index in df.index:
+        caught = str(df['A'][index])[0] == 'c'
+        stumped = str(df['A'][index])[0:2] == 'st'
+        run_out = str(df['A'][index])[0:8] == 'run out'
+        c_and_b = str(df['B'][index])[0:6] == 'ct & b'
+
+        if c_and_b:
+            name = df['B'][index][7:]
+        elif caught:
+            name = df['A'][index][1:]
+        elif stumped:
+            name = df['A'][index][2:]
+        elif run_out:
+            name = df['A'][index][7:]
 
     return df
 
