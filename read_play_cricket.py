@@ -96,24 +96,52 @@ def clean_fielding_df(oppo_batting_scorecard):
         if df['A'][index] == 0 and df['B'][index][0] == 'b':
             df.drop([index], inplace=True)
 
-    # Get stats on catches, run outs
-    fielding_stats = {}
+    # Get stats on catches, run outs and stumpings and store them in list
+    catches = []
+    run_outs = []
+    stumpings = []
     for index in df.index:
+
+        # Boolean values to determine the method of dismissal
         caught = str(df['A'][index])[0] == 'c'
         stumped = str(df['A'][index])[0:2] == 'st'
         run_out = str(df['A'][index])[0:8] == 'run out'
         c_and_b = str(df['B'][index])[0:6] == 'ct & b'
 
+        # Get the name of the person who got the catch/runout/stumping and add the dismissal to the relevant list
         if c_and_b:
             name = df['B'][index][7:]
+            catches.append(name)
         elif caught:
             name = df['A'][index][1:]
-        elif stumped:
-            name = df['A'][index][2:]
+            catches.append(name)
         elif run_out:
             name = df['A'][index][7:]
+            run_outs.append(name)
+        elif stumped:
+            name = df['A'][index][2:]
+            stumpings.append(name)
 
-    return df
+    # Get a list of unique fielders without losing old data
+    copy_catches = catches.copy()
+    copy_run_outs = run_outs.copy()
+    copy_stumpings = stumpings.copy()
+
+    catches.extend(run_outs)
+    catches.extend(stumpings)
+    unique_fielders = list(set(catches))
+
+    # Store fielding stats in dictionary. The dictionary has the names as keys, and a list of length 3 as values. For
+    # example, 'Charlie Royle': [2, 1, 0] would mean that Charlie Royle took 2 catches, 1 run out and 0 stumpings
+    fielding_stats = {}
+    for name in unique_fielders:
+        fielding_stats[name] = [copy_catches.count(name), copy_run_outs.count(name), copy_stumpings.count(name)]
+
+    # Convert dictionary to dataframe and rename columns
+    fielding_df = pd.DataFrame.from_dict(fielding_stats, orient='index')
+    fielding_df.columns = ['Catches', 'Run-outs', 'Stumpings']
+
+    return fielding_df
 
 
 def get_tables(match_url):
