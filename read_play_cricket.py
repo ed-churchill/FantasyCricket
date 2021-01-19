@@ -15,7 +15,7 @@ def clean_batting_df(batting_scorecard):
 
     # Clean the cells in the batsman column
     clean_cells = []
-    for i in range(0, 11):
+    for i in range(0, df.shape[0]):
 
         # Identify the clutter
         if df.iat[i, 1] == 0 or df.iat[i, 2] == 0:
