@@ -1,3 +1,6 @@
+"""Module containing functions that fetch scorecards from PlayCricket.com, clean them and
+ put the data into pandas dataframes"""
+
 import pandas as pd
 import re
 
