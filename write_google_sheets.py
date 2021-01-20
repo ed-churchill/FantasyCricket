@@ -24,5 +24,15 @@ def get_sheet():
     return sheet
 
 
+def update_stats(bat_df, bowl_df, field_df, week_number):
+    """Function that updates the sheet of a particular week
+
+    :param bat_df The cleaned batting dataframe, obtained from the function read_play_cricket.clean_scorecards()
+    :param bowl_df The cleaned bowling dataframe, obtained from the function read_play_cricket.clean_scorecards()
+    :param field_df The cleaned fielding dataframe, obtained from the function read_play_cricket.clean_scorecards()
+    :param week_number The Week Number of the sheet to be updated.
+    """
+
+
 week_1 = get_sheet().get_worksheet(0)
 print(week_1.cell(3, 2))
