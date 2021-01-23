@@ -65,11 +65,52 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
                 else:
                     print("Your input was not found on the sheet. Please try again \n")
 
-        # Add one to the player's game count
-        sheet.update_cell(name_row_index, 3, 1)
+        # Get batting stats from dataframe
+        batsman_index = batsman_list.index(name)
 
-        # Create list of stats that will be used to update the sheet. The list will be of the form:
-        # [RUNS, 4s, 6s, 50s, 100s, 150s, 200s, DUCKS]
+        # Get runs, fours and sixes
+        runs = int(bat_df.at[batsman_index, 'RUNS'])
+        fours = int(bat_df.at[batsman_index, '4s'])
+        sixes = int(bat_df.at[batsman_index, '6s'])
+
+        # Calculate milestones/ducks
+        if runs >= 200:
+            double_hundreds = 1
+            hundred_and_fifties = 0
+            hundreds = 0
+            fifties = 0
+            ducks = 0
+        elif 150 <= runs < 200:
+            double_hundreds = 0
+            hundred_and_fifties = 1
+            hundreds = 0
+            fifties = 0
+            ducks = 0
+        elif 100 <= runs < 150:
+            double_hundreds = 0
+            hundred_and_fifties = 0
+            hundreds = 1
+            fifties = 0
+            ducks = 0
+        elif 50 <= runs < 100:
+            double_hundreds = 0
+            hundred_and_fifties = 0
+            hundreds = 0
+            fifties = 1
+            ducks = 0
+        else:
+            double_hundreds = 0
+            hundred_and_fifties = 0
+            hundreds = 0
+            fifties = 0
+            ducks = 0
+
+        # Create list of batting stats and update the spreadsheet
+        batting_stats = [1, runs, fours, sixes, fifties, hundreds, hundred_and_fifties, double_hundreds, ducks]
+        batting_cells = sheet.range(name_row_index, 3, name_row_index, 11)
+        for i, val in enumerate(batting_stats):
+            batting_cells[i].value = val
+        sheet.update_cells(batting_cells)
 
         print(name + "'s stats have been successfully updated \n")
 
