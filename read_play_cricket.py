@@ -138,11 +138,12 @@ def clean_fielding_df(oppo_batting_scorecard):
     # example, 'Charlie Royle': [2, 1, 0] would mean that Charlie Royle took 2 catches, 1 run out and 0 stumpings
     fielding_stats = {}
     for name in unique_fielders:
-        fielding_stats[name] = [copy_catches.count(name), copy_run_outs.count(name), copy_stumpings.count(name)]
+        fielding_stats[unique_fielders.index(name)] = [name, copy_catches.count(name),
+                                                       copy_run_outs.count(name), copy_stumpings.count(name)]
 
     # Convert dictionary to dataframe and rename columns
     fielding_df = pd.DataFrame.from_dict(fielding_stats, orient='index')
-    fielding_df.columns = ['Catches', 'Run-outs', 'Stumpings']
+    fielding_df.columns = ['Fielder','Catches', 'Run-outs', 'Stumpings']
 
     return fielding_df
 
