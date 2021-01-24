@@ -175,6 +175,49 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
         print(name + "'s bowling stats have been successfully updated \n")
 
+    # Get list of names from fielding dataframe
+    fielder_list = list(field_df['Fielder'])
+
+    # For loop to update each player's fielding stats
+    for name in fielder_list:
+
+        # Case where names match
+        if name in sheet_names:
+            # Row index of the name in the sheet
+            name_row_index = sheet_names.index(name) + 3
+
+        # Case where names don't match
+        else:
+            valid_name = False
+            while not valid_name:
+                # Prompt user input
+                print('The name "' + name + '" was not found on the sheet.')
+                user_input = input('Please type the correct name, as it appears in the sheet.').strip()
+
+                # Check if user input is valid. If it is, update the sheet
+                if user_input in sheet_names:
+                    valid_name = True
+                    name_row_index = sheet_names.index(user_input) + 3
+                else:
+                    print("Your input was not found on the sheet. Please try again \n")
+
+        # Get fielding stats from dataframe
+        fielder_index = fielder_list.index(name)
+
+        # Get catches, run outs and stumpings
+        catches = int(field_df.at[fielder_index, 'Catches'])
+        run_outs = int(field_df.at[fielder_index, 'Run-outs'])
+        stumpings = int(field_df.at[fielder_index, 'Stumpings'])
+
+        # Create list of fielding stats and update the spreadsheet
+        fielding_stats = [catches, run_outs, stumpings]
+        fielding_cells = sheet.range(name_row_index, 20, name_row_index, 22)
+        for i, val in enumerate(fielding_stats):
+            fielding_cells[i].value = val
+        sheet.update_cells(fielding_cells)
+
+        print(name + "'s fielding stats have been successfully updated \n")
+
 
 def overs_to_balls(overs):
     """Function that returns the number of balls given a number of overs
