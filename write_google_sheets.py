@@ -33,10 +33,8 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
     :param week_number The Week Number of the sheet to be updated.
     """
 
-    # Get the relevant sheet instance
+    # Get the relevant sheet instance and list of names on sheet
     sheet = get_sheet().get_worksheet(week_number - 1)
-
-    # Get the list of names in the sheet
     sheet_names = sheet.col_values(2)[2:]
 
     # Get the list of names from the batting Dataframe
@@ -112,7 +110,88 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
             batting_cells[i].value = val
         sheet.update_cells(batting_cells)
 
-        print(name + "'s stats have been successfully updated \n")
+        print(name + "'s batting stats have been successfully updated \n")
+
+    # Get list of names from bowling dataframe
+    bowler_list = list(bowl_df['BOWLER'])
+
+    # For loop to update each player's bowling stats
+    for name in bowler_list:
+
+        # Case where names match
+        if name in sheet_names:
+            # Row index of the name in the sheet
+            name_row_index = sheet_names.index(name) + 3
+
+        # Case where names don't match
+        else:
+            valid_name = False
+            while not valid_name:
+                # Prompt user input
+                print('The name "' + name + '" was not found on the sheet.')
+                user_input = input('Please type the correct name, as it appears in the sheet.').strip()
+
+                # Check if user input is valid. If it is, update the sheet
+                if user_input in sheet_names:
+                    valid_name = True
+                    name_row_index = sheet_names.index(user_input) + 3
+                else:
+                    print("Your input was not found on the sheet. Please try again \n")
+
+        # Get bowling stats from dataframe
+        bowler_index = bowler_list.index(name)
+
+        # Get overs, balls, wickets, runs against and maidens
+        overs = bowl_df.at[bowler_index, 'OVERS']
+        balls = overs_to_balls(bowl_df.at[bowler_index, 'OVERS'])
+        wickets = int(bowl_df.at[bowler_index, 'WICKETS'])
+        runs_against = int(bowl_df.at[bowler_index, 'RUNS'])
+        maidens = int(bowl_df.at[bowler_index, 'MAIDENS'])
+
+        # Calculate 3fers/4fers, 5fers, and 6+fers
+        if wickets >= 6:
+            six_plus = 1
+            five = 0
+            three_four = 0
+        elif wickets == 5:
+            six_plus = 0
+            five = 1
+            three_four = 0
+        elif 3 <= wickets <= 4:
+            six_plus = 0
+            five = 0
+            three_four = 1
+        else:
+            six_plus = 0
+            five = 0
+            three_four = 0
+
+        # Create list of bowling stats and update the spreadsheet
+        bowling_stats = [overs, balls, wickets, runs_against, maidens, three_four, five, six_plus]
+        bowling_cells = sheet.range(name_row_index, 12, name_row_index, 19)
+        for i, val in enumerate(bowling_stats):
+            bowling_cells[i].value = val
+        sheet.update_cells(bowling_cells)
+
+        print(name + "'s bowling stats have been successfully updated \n")
+
+
+def overs_to_balls(overs):
+    """Function that returns the number of balls given a number of overs
+    :param overs The number of overs as a decinml to be converted
+    """
+
+    overs_string = str(overs)
+
+    # Find decimal part of overs
+    decimal = int(overs_string[-1])
+
+    # Find whole part of overs
+    whole_overs = int(overs_string[:-2])
+
+    # Calculate number of balls
+    balls = (6 * whole_overs) + decimal
+    return balls
 
 
 batting_df, bowling_df, fielding_df = read_play_cricket.clean_scorecards(
