@@ -167,8 +167,6 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
         print(name + "'s fielding stats have been successfully updated \n")
 
-    # TIDY UP THIS FUNCTION BY SPLITTING IT INTO SMALLER, MORE MANAGABLE FUNCTIONS
-
 
 def overs_to_balls(overs):
     """Function that returns the number of balls given a number of overs
