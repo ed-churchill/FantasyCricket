@@ -37,6 +37,11 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
     sheet = get_sheet().get_worksheet(week_number - 1)
     sheet_names = sheet.col_values(2)[2:]
 
+    # Get the MOTM and update the sheet with it
+    motm = man_of_the_match(sheet_names)
+    motm_index = name_to_index(motm, sheet_names)
+    sheet.update_cell(motm_index, 23, 1)
+
     # Get the list of names from the batting Dataframe
     batsman_list = list(bat_df['BATSMAN'])
 
@@ -212,6 +217,22 @@ def name_to_index(name, sheet_names):
                 return name_row_index
             else:
                 print("Your input was not found on the sheet. Please try again \n")
+
+
+def man_of_the_match(sheet_names):
+    """Functtion that requests user input for man of the match and returns the name of the person on the sheet who
+     is man of the match for a particular game
+
+     :param sheet_names The list of names on the spreadhseet to check the user input against"""
+
+    valid_name = False
+    while not valid_name:
+        print('Please type in the Man of the Match, as their name appears on the spreadsheet. \n')
+        user_input = input().strip()
+        if user_input in sheet_names:
+            return user_input
+        else:
+            print('The name "' + user_input + '"' + ' was not found in the sheet. Please try again')
 
 
 batting_df, bowling_df, fielding_df = read_play_cricket.clean_scorecards(
