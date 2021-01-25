@@ -43,25 +43,8 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
     # For loop to update each player's batting stats
     for name in batsman_list:
 
-        # Case where names match
-        if name in sheet_names:
-            # Row index of the name in the sheet
-            name_row_index = sheet_names.index(name) + 3
-
-        # Case where names don't match
-        else:
-            valid_name = False
-            while not valid_name:
-                # Prompt user input
-                print('The name "' + name + '" was not found on the sheet.')
-                user_input = input('Please type the correct name, as it appears in the sheet.').strip()
-
-                # Check if user input is valid. If it is, update the sheet
-                if user_input in sheet_names:
-                    valid_name = True
-                    name_row_index = sheet_names.index(user_input) + 3
-                else:
-                    print("Your input was not found on the sheet. Please try again \n")
+        # Get the index of this name in the sheet
+        name_row_index = name_to_index(name, sheet_names)
 
         # Get batting stats from dataframe
         batsman_index = batsman_list.index(name)
@@ -118,25 +101,8 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
     # For loop to update each player's bowling stats
     for name in bowler_list:
 
-        # Case where names match
-        if name in sheet_names:
-            # Row index of the name in the sheet
-            name_row_index = sheet_names.index(name) + 3
-
-        # Case where names don't match
-        else:
-            valid_name = False
-            while not valid_name:
-                # Prompt user input
-                print('The name "' + name + '" was not found on the sheet.')
-                user_input = input('Please type the correct name, as it appears in the sheet.').strip()
-
-                # Check if user input is valid. If it is, update the sheet
-                if user_input in sheet_names:
-                    valid_name = True
-                    name_row_index = sheet_names.index(user_input) + 3
-                else:
-                    print("Your input was not found on the sheet. Please try again \n")
+        # Get the index of the name in the sheet
+        name_row_index = name_to_index(name, sheet_names)
 
         # Get bowling stats from dataframe
         bowler_index = bowler_list.index(name)
@@ -181,25 +147,8 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
     # For loop to update each player's fielding stats
     for name in fielder_list:
 
-        # Case where names match
-        if name in sheet_names:
-            # Row index of the name in the sheet
-            name_row_index = sheet_names.index(name) + 3
-
-        # Case where names don't match
-        else:
-            valid_name = False
-            while not valid_name:
-                # Prompt user input
-                print('The name "' + name + '" was not found on the sheet.')
-                user_input = input('Please type the correct name, as it appears in the sheet.').strip()
-
-                # Check if user input is valid. If it is, update the sheet
-                if user_input in sheet_names:
-                    valid_name = True
-                    name_row_index = sheet_names.index(user_input) + 3
-                else:
-                    print("Your input was not found on the sheet. Please try again \n")
+        # Get the index of the name in the sheet.
+        name_row_index = name_to_index(name, sheet_names)
 
         # Get fielding stats from dataframe
         fielder_index = fielder_list.index(name)
@@ -218,6 +167,8 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
         print(name + "'s fielding stats have been successfully updated \n")
 
+    # TIDY UP THIS FUNCTION BY SPLITTING IT INTO SMALLER, MORE MANAGABLE FUNCTIONS
+
 
 def overs_to_balls(overs):
     """Function that returns the number of balls given a number of overs
@@ -235,6 +186,34 @@ def overs_to_balls(overs):
     # Calculate number of balls
     balls = (6 * whole_overs) + decimal
     return balls
+
+
+def name_to_index(name, sheet_names):
+    """Function that checks if a given name is in a given list of names from the Google Sheet. Returns
+    the index of the name in the sheet if it is found, prompts user input otherwise until the names match.
+    :param name The name to check against the list of names in the sheet
+    :param sheet_names The list of names of the FantasyCricketPlayerStats Sheet"""
+
+    # Case where names match
+    if name in sheet_names:
+        # Row index of the name in the sheet
+        name_row_index = sheet_names.index(name) + 3
+        return name_row_index
+
+    # Case where names don't match
+    else:
+        valid_name = False
+        while not valid_name:
+            # Prompt user input
+            print('The name "' + name + '" was not found on the sheet.')
+            user_input = input('Please type the correct name, as it appears in the sheet.').strip()
+
+            # Check if user input is valid. If it is, update the sheet
+            if user_input in sheet_names:
+                name_row_index = sheet_names.index(user_input) + 3
+                return name_row_index
+            else:
+                print("Your input was not found on the sheet. Please try again \n")
 
 
 batting_df, bowling_df, fielding_df = read_play_cricket.clean_scorecards(
