@@ -37,6 +37,10 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
     sheet = get_sheet().get_worksheet(week_number - 1)
     sheet_names = sheet.col_values(2)[2:]
 
+    # Get the winning team from the user. This will be used to add bonus winning points if Warwick won
+    warwick_win = input('Did Warwick win? (This will be used to give bonus points if they won). Type "y" or "n" and '
+                        'then press enter')
+
     # Get the MOTM and update the sheet with it
     motm = man_of_the_match(sheet_names)
     motm_index = name_to_index(motm, sheet_names)
@@ -99,6 +103,12 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
         sheet.update_cells(batting_cells)
 
         print(name + "'s batting stats have been successfully updated \n")
+
+        # Update the spreasheet if Warwick won for bonus points
+        if warwick_win.strip() == 'y':
+            sheet.update_cell(name_row_index, 24, 1)
+        else:
+            sheet.update_cell(name_row_index, 24, 0)
 
     # Get list of names from bowling dataframe
     bowler_list = list(bowl_df['BOWLER'])
