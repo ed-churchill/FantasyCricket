@@ -230,7 +230,7 @@ def name_to_index(name, sheet_names):
 
 
 def man_of_the_match(sheet_names):
-    """Functtion that requests user input for man of the match and returns the name of the person on the sheet who
+    """Function that requests user input for man of the match and returns the name of the person on the sheet who
      is man of the match for a particular game
 
      :param sheet_names The list of names on the spreadhseet to check the user input against"""
@@ -244,7 +244,3 @@ def man_of_the_match(sheet_names):
         else:
             print('The name "' + user_input + '"' + ' was not found in the sheet. Please try again')
 
-
-batting_df, bowling_df, fielding_df = read_play_cricket.clean_scorecards(
-    "https://uniofwarwick.play-cricket.com/website/results/4055612")
-update_stats(batting_df, bowling_df, fielding_df, 1)
