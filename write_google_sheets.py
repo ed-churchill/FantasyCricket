@@ -124,7 +124,7 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
         # Get overs, balls, wickets, runs against and maidens
         overs = bowl_df.at[bowler_index, 'OVERS']
-        balls = overs_to_balls(bowl_df.at[bowler_index, 'OVERS'])
+        balls = overs_to_balls(overs)
         wickets = int(bowl_df.at[bowler_index, 'WICKETS'])
         runs_against = int(bowl_df.at[bowler_index, 'RUNS'])
         maidens = int(bowl_df.at[bowler_index, 'MAIDENS'])
@@ -147,8 +147,8 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
             five = 0
             three_four = 0
 
-        # Create list of bowling stats and update the spreadsheet
-        bowling_stats = [overs, balls, wickets, runs_against, maidens, three_four, five, six_plus]
+        # Create list of bowling stats and update the spreadsheet.
+        bowling_stats = [float(overs), balls, wickets, runs_against, maidens, three_four, five, six_plus]
         bowling_cells = sheet.range(name_row_index, 12, name_row_index, 19)
         for i, val in enumerate(bowling_stats):
             bowling_cells[i].value = val
@@ -189,6 +189,10 @@ def overs_to_balls(overs):
     """
 
     overs_string = str(overs)
+
+    # Case where there is no decimal
+    if '.' not in overs_string:
+        return 6 * int(overs_string)
 
     # Find decimal part of overs
     decimal = int(overs_string[-1])

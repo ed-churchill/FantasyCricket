@@ -143,7 +143,7 @@ def clean_fielding_df(oppo_batting_scorecard):
 
     # Convert dictionary to dataframe and rename columns
     fielding_df = pd.DataFrame.from_dict(fielding_stats, orient='index')
-    fielding_df.columns = ['Fielder','Catches', 'Run-outs', 'Stumpings']
+    fielding_df.columns = ['Fielder', 'Catches', 'Run-outs', 'Stumpings']
 
     return fielding_df
 
