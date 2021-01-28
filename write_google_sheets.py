@@ -156,31 +156,38 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
         print(name + "'s bowling stats have been successfully updated \n")
 
-    # Get list of names from fielding dataframe
-    fielder_list = list(field_df['Fielder'])
+    # Case where fielding dataframe is empty
+    if field_df.empty:
+        print('There were no fielding stats to update. Either the stats were not available on Play Cricket, '
+              'or there were no catches, stumpings or run-outs')
 
-    # For loop to update each player's fielding stats
-    for name in fielder_list:
+    # Case where fielding dataframe is non-empty
+    else:
+        # Get list of names from fielding dataframe
+        fielder_list = list(field_df['Fielder'])
 
-        # Get the index of the name in the sheet.
-        name_row_index = name_to_index(name, sheet_names)
+        # For loop to update each player's fielding stats
+        for name in fielder_list:
 
-        # Get fielding stats from dataframe
-        fielder_index = fielder_list.index(name)
+            # Get the index of the name in the sheet.
+            name_row_index = name_to_index(name, sheet_names)
 
-        # Get catches, run outs and stumpings
-        catches = int(field_df.at[fielder_index, 'Catches'])
-        run_outs = int(field_df.at[fielder_index, 'Run-outs'])
-        stumpings = int(field_df.at[fielder_index, 'Stumpings'])
+            # Get fielding stats from dataframe
+            fielder_index = fielder_list.index(name)
 
-        # Create list of fielding stats and update the spreadsheet
-        fielding_stats = [catches, run_outs, stumpings]
-        fielding_cells = sheet.range(name_row_index, 20, name_row_index, 22)
-        for i, val in enumerate(fielding_stats):
-            fielding_cells[i].value = val
-        sheet.update_cells(fielding_cells)
+            # Get catches, run outs and stumpings
+            catches = int(field_df.at[fielder_index, 'Catches'])
+            run_outs = int(field_df.at[fielder_index, 'Run-outs'])
+            stumpings = int(field_df.at[fielder_index, 'Stumpings'])
 
-        print(name + "'s fielding stats have been successfully updated \n")
+            # Create list of fielding stats and update the spreadsheet
+            fielding_stats = [catches, run_outs, stumpings]
+            fielding_cells = sheet.range(name_row_index, 20, name_row_index, 22)
+            for i, val in enumerate(fielding_stats):
+                fielding_cells[i].value = val
+            sheet.update_cells(fielding_cells)
+
+            print(name + "'s fielding stats have been successfully updated \n")
 
 
 def overs_to_balls(overs):

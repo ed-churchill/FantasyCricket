@@ -141,9 +141,13 @@ def clean_fielding_df(oppo_batting_scorecard):
         fielding_stats[unique_fielders.index(name)] = [name, copy_catches.count(name),
                                                        copy_run_outs.count(name), copy_stumpings.count(name)]
 
-    # Convert dictionary to dataframe and rename columns
+    # Convert dictionary to dataframe and rename columns (if dataframe is non-empty)
     fielding_df = pd.DataFrame.from_dict(fielding_stats, orient='index')
-    fielding_df.columns = ['Fielder', 'Catches', 'Run-outs', 'Stumpings']
+    if not fielding_df.empty:
+        fielding_df.columns = ['Fielder', 'Catches', 'Run-outs', 'Stumpings']
+    else:
+        print('The fielding stats are empty. Either the stats were not available on Play Cricket, or there were no'
+              ' catches, stumpings or run-outs')
 
     return fielding_df
 
@@ -160,16 +164,59 @@ def get_tables(match_url):
     tables = pd.read_html(match_url)
 
     # Get correct batting and bowling scorecards using user input
-    print(tables[1])
-    x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter)")
-    if x == 'y':
-        batting_scorecard = tables[1]
-        bowling_scorecard = tables[6]
-        oppo_batting_scorecard = tables[4]
+    # Case where all relevant tables are on the page
+    if len(tables) >= 7:
+        print(tables[1])
+        x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter)")
+        if x == 'y':
+            batting_scorecard = tables[1]
+            bowling_scorecard = tables[6]
+            oppo_batting_scorecard = tables[4]
+        else:
+            batting_scorecard = tables[4]
+            bowling_scorecard = tables[3]
+            oppo_batting_scorecard = tables[1]
+
+    # Case where there are some tables missing on the page. Prompt user for input to find each of the relevant tables
     else:
-        batting_scorecard = tables[4]
-        bowling_scorecard = tables[3]
-        oppo_batting_scorecard = tables[1]
+        print("There was some data missing on the webpage so I need your help to find the correct scorecards \n")
+
+        # Find batting scorecard
+        found_batting_scorecard = False
+        for index, table in enumerate(tables):
+            print(table)
+            x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter)")
+            if x == 'y':
+                found_batting_scorecard = True
+                batting_scorecard = tables[index]
+                break
+        if not found_batting_scorecard:
+            print("I was unable to find the batting scorecard. Rerun the program and check you didn't miss it")
+
+        # Find bowling scorecard
+        found_bowling_scorecard = False
+        for index, table in enumerate(tables):
+            print(table)
+            x = input("Is this Warwick's bowling scorecard? (type 'y' or 'n' then press enter)")
+            if x == 'y':
+                found_bowling_scorecard = True
+                bowling_scorecard = tables[index]
+                break
+        if not found_bowling_scorecard:
+            print("I was unable to find the bowling scorecard. Rerun the program and check you didn't miss it")
+
+        # Find fielding scorecard
+        found_fielding_scorecard = False
+        for index, table in enumerate(tables):
+            print(table)
+            x = input("Is this the opposition's batting scorecard? (type 'y' or 'n' then press enter)")
+            if x == 'y':
+                found_fielding_scorecard = True
+                oppo_batting_scorecard = tables[index]
+                break
+        if not found_fielding_scorecard:
+            print("I was unable to find the opposition's batting scorecard. "
+                  "Rerun the program and check you didn't miss it")
 
     return batting_scorecard, bowling_scorecard, oppo_batting_scorecard
 
