@@ -167,7 +167,7 @@ def get_tables(match_url):
     # Case where all relevant tables are on the page
     if len(tables) >= 7:
         print(tables[1])
-        x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter)")
+        x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter) \n")
         if x == 'y':
             batting_scorecard = tables[1]
             bowling_scorecard = tables[6]
@@ -185,7 +185,7 @@ def get_tables(match_url):
         found_batting_scorecard = False
         for index, table in enumerate(tables):
             print(table)
-            x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter)")
+            x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter) \n")
             if x == 'y':
                 found_batting_scorecard = True
                 batting_scorecard = tables[index]
@@ -197,7 +197,7 @@ def get_tables(match_url):
         found_bowling_scorecard = False
         for index, table in enumerate(tables):
             print(table)
-            x = input("Is this Warwick's bowling scorecard? (type 'y' or 'n' then press enter)")
+            x = input("Is this Warwick's bowling scorecard? (type 'y' or 'n' then press enter) \n")
             if x == 'y':
                 found_bowling_scorecard = True
                 bowling_scorecard = tables[index]
@@ -209,7 +209,7 @@ def get_tables(match_url):
         found_fielding_scorecard = False
         for index, table in enumerate(tables):
             print(table)
-            x = input("Is this the opposition's batting scorecard? (type 'y' or 'n' then press enter)")
+            x = input("Is this the opposition's batting scorecard? (type 'y' or 'n' then press enter) \n")
             if x == 'y':
                 found_fielding_scorecard = True
                 oppo_batting_scorecard = tables[index]
