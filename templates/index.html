@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Uni</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+    {% for name, uni in users %}
+      <tr>
+        <th scope="row">{{name}}</th>
+        <td>{{uni}}</td>
+      </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+{% endblock %}
+
+
+
+<!-- <!doctype html>
+<html>
+<head>
+  <title>Home Page</title>
+</head>
+<body>
+  <h1>Home Page!</h1>
+
+  {% for x in scores %}
+    <p>Some text: {{x}}</p>
+  {% endfor %}
+
+</body>
+</html> -->
