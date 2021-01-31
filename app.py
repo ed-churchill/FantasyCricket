@@ -4,14 +4,13 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    # download data here
-
-    table_data = [("Ed Churchill", "Warwick"),
-                ("Kacper", "Imperial"),
-                ("Bronson Carrasco", "Essex"),
-                ("Michael Roper-Cowley", "Bristol"),
-                ("Alan Philip", "LSE"),
-                ("James Morrison", "Oxford")]
+    
+    table_data = [("Ed", 20, "Warwick"), 
+    ("Alan", 20, "LSE"), 
+    ("Kacper", 20, "Imperial"), 
+    ("Bronson", 21, "Essex"), 
+    ("James", 21, "Oxford"), 
+    ("Michael", 20, "Bristol")]
     return render_template("index.html", users=table_data)
 
 @app.route("/info")

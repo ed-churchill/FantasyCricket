@@ -4,16 +4,26 @@
     <thead>
       <tr>
         <th scope="col">Name</th>
+        <th scope="col">Age</th>
         <th scope="col">Uni</th>
       </tr>
     </thead>
     <tbody>
     
-    {% for name, uni in users %}
+    {% for name, age, uni in users %}
       <tr>
-        <th scope="row">{{name}}</th>
+        <td>{{name}}</td>
+        <td>{{age}}</td>
         <td>{{uni}}</td>
       </tr>
+    {% endfor %}
+
+    {% for name, age, uni in users %}
+      {% if age > 20 %}
+        <p>{{name}} has already had his 21st birthday</p>
+      {% else %}
+        <p>{{name}} has not yet had his 21st birthday</p>
+      {% endif %}  
     {% endfor %}
 
     </tbody>
