@@ -1,5 +1,4 @@
-import read_play_cricket
-import write_google_sheets
+from SheetUpdating import write_google_sheets, read_play_cricket
 
 # Test links
 test_links = ['https://uniofwarwick.play-cricket.com/website/results/4050085',
