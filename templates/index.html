@@ -18,16 +18,16 @@
       </tr>
     {% endfor %}
 
-    {% for name, age, uni in users %}
+    </tbody>
+  </table>
+
+  {% for name, age, uni in users %}
       {% if age > 20 %}
         <p>{{name}} has already had his 21st birthday</p>
       {% else %}
         <p>{{name}} has not yet had his 21st birthday</p>
       {% endif %}  
     {% endfor %}
-
-    </tbody>
-  </table>
 {% endblock %}
 
 
