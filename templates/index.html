@@ -1,48 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
+
 <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Age</th>
-        <th scope="col">Uni</th>
-      </tr>
-    </thead>
-    <tbody>
-    
-    {% for name, age, uni in users %}
-      <tr>
-        <td>{{name}}</td>
-        <td>{{age}}</td>
-        <td>{{uni}}</td>
-      </tr>
+  <thead>
+    <tr>
+      {% for col in headings %}
+        <th scope="col">{{col}}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for i, row in data.iterrows() %}
+    <tr>
+      {% for val in row[:] %}
+      <td> {{val}}</td>
+      {% endfor %}
+    </tr>
     {% endfor %}
+  </tbody>
+</table>
 
-    </tbody>
-  </table>
-
-  {% for name, age, uni in users %}
-      {% if age > 20 %}
-        <p>{{name}} has already had his 21st birthday</p>
-      {% else %}
-        <p>{{name}} has not yet had his 21st birthday</p>
-      {% endif %}  
-    {% endfor %}
 {% endblock %}
-
-
-
-<!-- <!doctype html>
-<html>
-<head>
-  <title>Home Page</title>
-</head>
-<body>
-  <h1>Home Page!</h1>
-
-  {% for x in scores %}
-    <p>Some text: {{x}}</p>
-  {% endfor %}
-
-</body>
-</html> -->

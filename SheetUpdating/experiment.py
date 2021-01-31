@@ -24,7 +24,7 @@ total_stats_sheet = sheet.get_worksheet(10)
 print(total_stats_sheet.cell(3, 4).value)
 
 # Get all the data in the sheet (in a json string) and view it
-records_data = first_sheet.get_all_records()
+records_data = total_stats_sheet.get_all_records()
 # print(records_data)
 
 # Convert json string to pandas dataframe
