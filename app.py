@@ -44,17 +44,28 @@ for i, sheet_name in enumerate(sheet_names):
 #-------------------------------------------------------------------------------
 @app.route("/")
 def home():
-    sheet= "TotalStats"
-    headings = list(data[sheet].columns.values)
-    return render_template("index.html", headings=headings, data=data[sheet].head(5))
+    return render_template("index.html")
 
-@app.route("/info")
-def info():
-    return render_template("info.html")
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
-@app.route("/player-stats")
-def player_stats():
-    return render_template("player-stats.html")
+@app.route("/dream-team")
+def dream_team():
+    return render_template("dream-team.html")
+
+@app.route("/fun-facts")
+def fun_facts():
+    return render_template("fun-facts.html")
+
+@app.route("/teams")
+def teams():
+    return render_template("teams.html")
+
+@app.route("/player-breakdowns")
+def player_breakdowns():
+    return render_template("player-breakdowns.html")
+
 
 
 if __name__ == "__main__":
