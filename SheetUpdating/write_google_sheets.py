@@ -42,7 +42,7 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
     # Get the MOTM and update the sheet with it
     motm = man_of_the_match(sheet_names)
     motm_index = name_to_index(motm, sheet_names)
-    sheet.update_cell(motm_index, 23, 1)
+    sheet.update_cell(motm_index, 24, 1)
 
     # Get the list of names from the batting Dataframe
     batsman_list = list(bat_df['BATSMAN'])
@@ -95,7 +95,7 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
         # Create list of batting stats and update the spreadsheet
         batting_stats = [1, runs, fours, sixes, fifties, hundreds, hundred_and_fifties, double_hundreds, ducks]
-        batting_cells = sheet.range(name_row_index, 3, name_row_index, 11)
+        batting_cells = sheet.range(name_row_index, 4, name_row_index, 12)
         for i, val in enumerate(batting_stats):
             batting_cells[i].value = val
         sheet.update_cells(batting_cells)
@@ -104,9 +104,9 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
         # Update the spreasheet if Warwick won for bonus points
         if warwick_win.strip() == 'y':
-            sheet.update_cell(name_row_index, 24, 1)
+            sheet.update_cell(name_row_index, 25, 1)
         else:
-            sheet.update_cell(name_row_index, 24, 0)
+            sheet.update_cell(name_row_index, 25, 0)
 
     # Get list of names from bowling dataframe
     bowler_list = list(bowl_df['BOWLER'])
@@ -147,7 +147,7 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
         # Create list of bowling stats and update the spreadsheet.
         bowling_stats = [float(overs), balls, wickets, runs_against, maidens, three_four, five, six_plus]
-        bowling_cells = sheet.range(name_row_index, 12, name_row_index, 19)
+        bowling_cells = sheet.range(name_row_index, 13, name_row_index, 20)
         for i, val in enumerate(bowling_stats):
             bowling_cells[i].value = val
         sheet.update_cells(bowling_cells)
@@ -180,7 +180,7 @@ def update_stats(bat_df, bowl_df, field_df, week_number):
 
             # Create list of fielding stats and update the spreadsheet
             fielding_stats = [catches, run_outs, stumpings]
-            fielding_cells = sheet.range(name_row_index, 20, name_row_index, 22)
+            fielding_cells = sheet.range(name_row_index, 21, name_row_index, 23)
             for i, val in enumerate(fielding_stats):
                 fielding_cells[i].value = val
             sheet.update_cells(fielding_cells)
