@@ -54,10 +54,6 @@ def about():
 def dream_team():
     return render_template("dream-team.html")
 
-@app.route("/fun-facts")
-def fun_facts():
-    return render_template("fun-facts.html")
-
 @app.route("/teams")
 def teams():
     return render_template("teams.html")
