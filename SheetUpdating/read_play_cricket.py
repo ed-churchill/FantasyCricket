@@ -80,76 +80,82 @@ def clean_fielding_df(oppo_batting_scorecard):
     # Rename oppo_batting_scorecard for ease
     df = oppo_batting_scorecard
 
-    # Remove unecessary columns
-    df.drop(df.columns[[0, 3, 4, 5, 6, 7]], axis=1, inplace=True)
-
-    # Remame two remaining columns
-    df.rename(columns={'Unnamed: 1': 'A', 'Unnamed: 2': 'B'}, inplace=True)
-
-    # Replace any NaN values with 0s
-    df = df.fillna(0)
-
-    # Delete any lbw rows, not out rows and did not bat rows
-    df = df[df.A != 'lbw']
-    df = df[df.A != 'not out']
-    df = df[df.A != 'did not bat']
-
-    # Delete any rows where the mode of dismissal is bowled
-    for index in df.index:
-        if df['A'][index] == 0 and df['B'][index][0] == 'b':
-            df.drop([index], inplace=True)
-
-    # Get stats on catches, run outs and stumpings and store them in list
-    catches = []
-    run_outs = []
-    stumpings = []
-    for index in df.index:
-
-        # Boolean values to determine the method of dismissal
-        caught = str(df['A'][index])[0] == 'c'
-        stumped = str(df['A'][index])[0:2] == 'st'
-        run_out = str(df['A'][index])[0:8] == 'run out'
-        c_and_b = str(df['B'][index])[0:6] == 'ct & b'
-
-        # Get the name of the person who got the catch/runout/stumping and add the dismissal to the relevant list
-        if c_and_b:
-            name = df['B'][index][7:]
-            catches.append(name)
-        elif caught:
-            name = df['A'][index][1:]
-            catches.append(name)
-        elif run_out:
-            name = df['A'][index][7:]
-            run_outs.append(name)
-        elif stumped:
-            name = df['A'][index][2:]
-            stumpings.append(name)
-
-    # Get a list of unique fielders without losing old data
-    copy_catches = catches.copy()
-    copy_run_outs = run_outs.copy()
-    copy_stumpings = stumpings.copy()
-
-    catches.extend(run_outs)
-    catches.extend(stumpings)
-    unique_fielders = list(set(catches))
-
-    # Store fielding stats in dictionary. The dictionary has the names as keys, and a list of length 3 as values. For
-    # example, 'Charlie Royle': [2, 1, 0] would mean that Charlie Royle took 2 catches, 1 run out and 0 stumpings
-    fielding_stats = {}
-    for name in unique_fielders:
-        fielding_stats[unique_fielders.index(name)] = [name, copy_catches.count(name),
-                                                       copy_run_outs.count(name), copy_stumpings.count(name)]
-
-    # Convert dictionary to dataframe and rename columns (if dataframe is non-empty)
-    fielding_df = pd.DataFrame.from_dict(fielding_stats, orient='index')
-    if not fielding_df.empty:
-        fielding_df.columns = ['Fielder', 'Catches', 'Run-outs', 'Stumpings']
+    # Return empty dataframe if the opposition batting scorecard is empty
+    if df.empty:
+        return df
+    
     else:
-        print('The fielding stats are empty. Either the stats were not available on Play Cricket, or there were no'
-              ' catches, stumpings or run-outs')
+        # Remove unecessary columns
+        df.drop(df.columns[[0, 3, 4, 5, 6, 7]], axis=1, inplace=True)
 
-    return fielding_df
+        # Remame two remaining columns
+        df.rename(columns={'Unnamed: 1': 'A', 'Unnamed: 2': 'B'}, inplace=True)
+
+        # Replace any NaN values with 0s
+        df = df.fillna(0)
+
+        # Delete any lbw rows, not out rows and did not bat rows
+        df = df[df.A != 'lbw']
+        df = df[df.A != 'not out']
+        df = df[df.A != 'did not bat']
+
+        # Delete any rows where the mode of dismissal is bowled, or where we have an 'Unsure'
+        for index in df.index:
+            if df['A'][index] == 0 and df['B'][index][0] == 'b':
+                df.drop([index], inplace=True)
+            if 'unsure' in str(df['A'][index]).lower() or 'unsure' in str(df['B'][index]).lower():
+                df.drop([index], inplace=True)
+
+        # Get stats on catches, run outs and stumpings and store them in list
+        catches = []
+        run_outs = []
+        stumpings = []
+        for index in df.index:
+            # Boolean values to determine the method of dismissal
+            caught = str(df['A'][index])[0] == 'c'
+            stumped = str(df['A'][index])[0:2] == 'st'
+            run_out = str(df['A'][index])[0:8] == 'run out'
+            c_and_b = str(df['B'][index])[0:6] == 'ct & b'
+
+            # Get the name of the person who got the catch/runout/stumping and add the dismissal to the relevant list
+            if c_and_b:
+                name = df['B'][index][7:]
+                catches.append(name)
+            elif caught:
+                name = df['A'][index][1:]
+                catches.append(name)
+            elif run_out:
+                name = df['A'][index][7:]
+                run_outs.append(name)
+            elif stumped:
+                name = df['A'][index][2:]
+                stumpings.append(name)
+
+        # Get a list of unique fielders without losing old data
+        copy_catches = catches.copy()
+        copy_run_outs = run_outs.copy()
+        copy_stumpings = stumpings.copy()
+
+        catches.extend(run_outs)
+        catches.extend(stumpings)
+        unique_fielders = list(set(catches))
+
+        # Store fielding stats in dictionary. The dictionary has the names as keys, and a list of length 3 as values. For
+        # example, 'Charlie Royle': [2, 1, 0] would mean that Charlie Royle took 2 catches, 1 run out and 0 stumpings
+        fielding_stats = {}
+        for name in unique_fielders:
+            fielding_stats[unique_fielders.index(name)] = [name, copy_catches.count(name),
+                                                        copy_run_outs.count(name), copy_stumpings.count(name)]
+
+        # Convert dictionary to dataframe and rename columns (if dataframe is non-empty)
+        fielding_df = pd.DataFrame.from_dict(fielding_stats, orient='index')
+        if not fielding_df.empty:
+            fielding_df.columns = ['Fielder', 'Catches', 'Run-outs', 'Stumpings']
+        else:
+            print('The fielding stats are empty. Either the stats were not available on Play Cricket, or there were no'
+                ' catches, stumpings or run-outs')
+
+        return fielding_df
 
 
 def get_tables(match_url):
@@ -166,57 +172,79 @@ def get_tables(match_url):
     # Get correct batting and bowling scorecards using user input
     # Case where all relevant tables are on the page
     if len(tables) >= 7:
-        print(tables[1])
-        x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter) \n")
-        if x == 'y':
-            batting_scorecard = tables[1]
-            bowling_scorecard = tables[6]
-            oppo_batting_scorecard = tables[4]
-        else:
-            batting_scorecard = tables[4]
-            bowling_scorecard = tables[3]
-            oppo_batting_scorecard = tables[1]
+        
+        valid_user_input = False
+        while not valid_user_input:
+            print(tables[1])
+            print("\n Is this Warwick's batting scorecard? This information will be used to get the correct data from the website.\n")
+            x = input("Type 'y' or 'n' then press enter.")
+            
+            if x.strip() == 'y':
+                batting_scorecard = tables[1]
+                bowling_scorecard = tables[6]
+                oppo_batting_scorecard = tables[4]
+                valid_user_input = True
+            elif x.strip() == 'n':
+                batting_scorecard = tables[4]
+                bowling_scorecard = tables[3]
+                oppo_batting_scorecard = tables[1]
+                valid_user_input = True
+            else:
+                print("\n Your input was invalid. Remember to type in 'y' or 'n'. Please try again!\n")
 
     # Case where there are some tables missing on the page. Prompt user for input to find each of the relevant tables
     else:
-        print("There was some data missing on the webpage so I need your help to find the correct scorecards \n")
+        # Get rid of the unecessary first table and any empty dataframes
+        tables.pop(0)
+        non_empty_tables = []
+        for table in tables:
+            if not table.empty:
+                non_empty_tables.append(table)
+
+        # Inform user of missing data
+        print("\nThere was some data missing on the webpage so I need your help to find the correct scorecards\n")
 
         # Find batting scorecard
         found_batting_scorecard = False
-        for index, table in enumerate(tables):
+        for index, table in enumerate(non_empty_tables):
             print(table)
-            x = input("Is this Warwick's batting scorecard? (type 'y' or 'n' then press enter) \n")
-            if x == 'y':
+            print("\nIs this Warwick's batting scorecard? This information will be used to get the correct data from the website.\n")
+            x = input("Type 'y' or 'n' and then press enter.")
+            
+            if x.strip() == 'y':
                 found_batting_scorecard = True
-                batting_scorecard = tables[index]
+                batting_scorecard = non_empty_tables[index]
+                batting_scorecard_index = index
                 break
+            else:
+                print("\n")
+        
+        # Remove batting scorecard from list since it's already been found.
+        non_empty_tables.pop(batting_scorecard_index)
+        
+        # Inform user in the case that the batting scorecard could not be found
         if not found_batting_scorecard:
-            print("I was unable to find the batting scorecard. Rerun the program and check you didn't miss it")
+            print("\nI was unable to find the batting scorecard. Rerun the program and check you didn't miss it or input the data manually to the spreadsheet.\n")
 
         # Find bowling scorecard
         found_bowling_scorecard = False
-        for index, table in enumerate(tables):
+        for index, table in enumerate(non_empty_tables):
             print(table)
-            x = input("Is this Warwick's bowling scorecard? (type 'y' or 'n' then press enter) \n")
-            if x == 'y':
+            print("\nIs this Warwick's bowling scorecard? This information will be used to get the correct data from the website.\n")
+            x = input("Type 'y' or 'n' and then press enter.")
+            if x.strip() == 'y':
                 found_bowling_scorecard = True
-                bowling_scorecard = tables[index]
+                bowling_scorecard = non_empty_tables[index]
                 break
+            else:
+                print("\n")
+
+        # Inform user in the case that the bowling scorecard could not be found
         if not found_bowling_scorecard:
             print("I was unable to find the bowling scorecard. Rerun the program and check you didn't miss it")
 
-        # Find fielding scorecard
-        found_fielding_scorecard = False
-        for index, table in enumerate(tables):
-            print(table)
-            x = input("Is this the opposition's batting scorecard? (type 'y' or 'n' then press enter) \n")
-            if x == 'y':
-                found_fielding_scorecard = True
-                oppo_batting_scorecard = tables[index]
-                break
-        if not found_fielding_scorecard:
-            print("I was unable to find the opposition's batting scorecard. "
-                  "Rerun the program and check you didn't miss it")
+        print("\nThe fielding stats were not found since the opposition's batting scorecard was not found on the page. Please enter them manually to the spreadsheet")
+        oppo_batting_scorecard = pd.DataFrame()
 
     return batting_scorecard, bowling_scorecard, oppo_batting_scorecard
 
