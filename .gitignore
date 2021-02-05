@@ -3,3 +3,4 @@ google-credentials.json
 venv/
 .ipynb_checkpoints/
 __pycache__/
+data/*
