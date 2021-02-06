@@ -1,4 +1,5 @@
-from flask import Flask, render_template, session
+from flask import Flask, render_template
+from data_manager import generate_table_sheet, generate_league_table
 
 import gspread
 import pandas as pd
@@ -6,7 +7,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 
 app = Flask(__name__)
-app.secret_key = "134161234"
 
 
 # -------------------------------------------------------------------------------
@@ -14,7 +14,8 @@ app.secret_key = "134161234"
 # -------------------------------------------------------------------------------
 @app.route("/")
 def home():
-    return render_template("index.html")
+    table = generate_league_table()
+    return render_template("index.html", league_table=table)
 
 
 @app.route("/about")
@@ -41,31 +42,37 @@ def player_breakdowns():
 def initialize():
     # # Define the scope of the application
     # Store sheets in dictionary
-    sheet_names = ["Week1", "Week2", "Week3", "Week4", "Week5", "Week6", "Week7",
-                   "Week8", "Week9", "Week10", "TotalStats", "TeamList"]
 
-    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/spreadsheets',
-             'https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive']
+    # check if the data folder is empty
+    if not os.listdir("data"):
+        print("Downloading sheets from google sheets")
+        sheet_names = ["Week1", "Week2", "Week3", "Week4", "Week5", "Week6", "Week7",
+                    "Week8", "Week9", "Week10", "TotalStats", "TeamList"]
 
-    # Add credentials to the account
-    creds = ServiceAccountCredentials.from_json_keyfile_name('google-credentials.json', scope)
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/spreadsheets',
+                'https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive']
 
-    # Authorise the client sheet
-    client = gspread.authorize(creds)
+        # Add credentials to the account
+        creds = ServiceAccountCredentials.from_json_keyfile_name('google-credentials.json', scope)
 
-    # Get the spreadsheet
-    sheet = client.open("FantasyCricketPlayerStats")
+        # Authorise the client sheet
+        client = gspread.authorize(creds)
 
-    for i, sheet_name in enumerate(sheet_names):
-        spreadsheet = sheet.get_worksheet(i)
-        records_data = spreadsheet.get('A2:AC200')
-        df = pd.DataFrame.from_dict(records_data)
-        df.columns = df.iloc[0]
-        df = df[1:]
-        df.to_csv(os.path.join('data', f'{sheet_name}.csv'), index=False)
+        # Get the spreadsheet
+        sheet = client.open("FantasyCricketPlayerStats")
 
-    for i, sheet_name in enumerate(sheet_names[-1]):
-        df = pd.read_csv(os.path.join('data', f"{sheet_name}.csv"))
+        for i, sheet_name in enumerate(sheet_names):
+            spreadsheet = sheet.get_worksheet(i)
+            sheet_range = 'A2:AC200' if sheet_name != "TeamList" else 'A1:AC200'
+            records_data = spreadsheet.get(sheet_range)
+            df = pd.DataFrame.from_dict(records_data)
+            df.columns = [x.strip() for x in df.iloc[0]]
+            df = df[1:]
+            df.to_csv(os.path.join('data', f'{sheet_name}.csv'), index=False)
+        
+        print("Sheet downloading completed")
+
+
 
 
 if __name__ == "__main__":

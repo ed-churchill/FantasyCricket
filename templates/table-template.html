@@ -1,0 +1,18 @@
+<table class="table">
+  <thead>
+    <tr>
+      {% for col in headings %}
+        <th scope="col">{{col}}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for i, row in df.iterrows() %}
+    <tr>
+      {% for val in row[:] %}
+      <td> {{val}}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
