@@ -64,7 +64,7 @@ def initialize():
 
         for i, sheet_name in enumerate(sheet_names):
             spreadsheet = sheet.get_worksheet(i)
-            sheet_range = 'A2:AC200' if sheet_name != "TeamList" else 'A1:AC200'
+            sheet_range = 'A2:AD200' if sheet_name != "TeamList" else 'A1:AD200'
             records_data = spreadsheet.get(sheet_range)
             df = pd.DataFrame.from_dict(records_data)
             df.columns = [x.strip() for x in df.iloc[0]]

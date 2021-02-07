@@ -76,6 +76,35 @@ def generate_league_table():
 # Tables for Dream Team page
 ###-------------------------------------------------------------
 
+def generate_dream_team_table():
+    """Generates a html table fo the current Fantasy Cricket Dream Team"""
+
+    # Get TotalStats sheet as a dataframe
+    total_stats = get_sheet_df("TotalStats")
+
+    # Discard unecessary columns so we're left with Player Name, Player Role and TOTAL
+    total_stats.drop(['Player Number', 'GAMES', 'RUNS', '4s', '6s', '50s', '100s', '150s', '200s', 'DUCKS', 'OVERS',
+                        'BALLS', 'WICKETS', 'RUNS AGAINST', 'MAIDENS', '3fers/4fers', '5fers', '6+fers',
+                        'CATCHES', 'RUN-OUTS', 'STUMPINGS', 'MOTM', 'WINS', 'BATTING', 'BOWLING', 'FIELDING', 'BONUS'], axis=1, inplace=True)
+
+    # Split dataframe into 4 different dataframes, one for each role
+    all_rounders = total_stats[total_stats['Player Role'] == 'All-Rounder']
+    batsmen = total_stats[total_stats['Player Role'] == 'Batsman']
+    bowlers = total_stats[total_stats['Player Role'] == 'Bowler']
+    wicket_keepers = total_stats[total_stats['Player Role'] == 'Wicket-keeper']
+
+    # Sort the dataframe for each role in desceding order of total points
+    all_rounders = all_rounders.sort_values(by=['TOTAL'], ascending=False)
+    batsmen = batsmen.sort_values(by=['TOTAL'], ascending=False)
+    bowlers = bowlers.sort_values(by=['TOTAL'], ascending=False)
+    wicket_keepers = wicket_keepers.sort_values(by=['TOTAL'], ascending=False)
+
+    # Get the dream team
+    dream_team = pd.concat([batsmen.head(4), all_rounders.head(3), wicket_keepers.head(1), bowlers.head(3)])
+    return generate_table(dream_team)
+
+
+
 
 ###-------------------------------------------------------------
 # Tables for Teams page
@@ -116,9 +145,6 @@ def generate_team_roster_table(team_name):
     else:
         raise Exception(f"Couldn't find '{team_name}' on the TeamList")
 
-    # Transpose the data for storage on the website
-    # return generate_table(team_roster)
-    
 
 
 
@@ -129,4 +155,4 @@ def generate_team_roster_table(team_name):
 
 
 if __name__ == "__main__":
-    generate_team_roster_table('Test2 CC')
+    generate_dream_team_table()
