@@ -101,6 +101,7 @@ def generate_dream_team_table():
 
     # Get the dream team
     dream_team = pd.concat([batsmen.head(4), all_rounders.head(3), wicket_keepers.head(1), bowlers.head(3)])
+
     return generate_table(dream_team)
 
 
@@ -155,4 +156,4 @@ def generate_team_roster_table(team_name):
 
 
 if __name__ == "__main__":
-    generate_dream_team_table()
+    pass
