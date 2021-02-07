@@ -2,6 +2,27 @@ from flask import render_template_string, render_template
 import pandas as pd
 import os
 
+def numbers_to_names(numbers):
+    """Returns a list of the names of players in the given number order
+    
+    :param numbers The list of Player Numbers to get the names of
+    :param total_stats The dataframe of the TotalStats spreadsheet (obtain this """
+
+    # Get total stats spreadsheet
+    total_stats = get_sheet_df('TotalStats')
+
+    # Get relevant columns
+    nums_and_names = total_stats[['Player Number', 'Player Name']]
+
+    # Get player name, or throw exception if the number is out of range
+    def number_to_name(number):
+        if number in list(nums_and_names['Player Number']):
+            player_name = nums_and_names['Player Name'].iloc[number - 1]
+            return player_name
+        else:
+            raise Exception(f"A Player with number {number} was not found. Check the player number matches one on the sheet")
+
+    return [number_to_name(x) for x in numbers]
 
 def get_sheet_df(sheet):
     """Returns the given sheet as a dataframe
@@ -67,14 +88,37 @@ def generate_team_roster_table(team_name):
 
     # Get TeamList as dataframe
     team_list = get_sheet_df("TeamList")
-    print(team_list)
 
     # Get relevant row of dataframe for team, or throw exception if team name was not found
     team_names = list(team_list['Team Name'])
+
+    # Trim the data to only get the players, not the points
+    team_list.drop(['Team Name', 'Team Owner', 'Week 1 Points', 'Week 2 Points', 'Week 3 Points', 'Week 4 Points', 
+                    'Week 5 Points', 'Week 6 Points', 'Week 7 Points', 'Week 8 Points', 'Week 9 Points',
+                     'Week 10 Points', 'Total Points'], axis=1, inplace=True)
+
+    # Get the relevant row of the dataframe, otherwise throw an exception if the team is not found
     if team_name in team_names:
-        print('yay')
+        row_index = team_names.index(team_name)
+        team_roster = team_list.iloc[[row_index]]
+
+        # Transpose for presentation
+        team_roster = team_roster.T
+
+        # Convert numbers to list of player names
+        numbers = list(team_roster[0])
+        player_names = numbers_to_names(numbers)
+
+        team_roster[0] = team_roster.index.values
+        team_roster[1] = player_names
+        team_roster.columns = ["Role", "Player Name"]
+        return generate_table(team_roster)
     else:
-        raise Exception(f"Couldn't find {team_name}")
+        raise Exception(f"Couldn't find '{team_name}' on the TeamList")
+
+    # Transpose the data for storage on the website
+    # return generate_table(team_roster)
+    
 
 
 
@@ -85,4 +129,4 @@ def generate_team_roster_table(team_name):
 
 
 if __name__ == "__main__":
-    generate_team_roster_table('yeet')
+    generate_team_roster_table('Test2 CC')
