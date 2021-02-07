@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from data_manager import generate_table_sheet, generate_league_table, generate_team_roster_table
+from data_manager import generate_table_sheet, generate_league_table, generate_team_roster_table, generate_dream_team_table
 
 import gspread
 import pandas as pd
@@ -25,7 +25,8 @@ def about():
 
 @app.route("/dream-team")
 def dream_team():
-    return render_template("dream-team.html")
+    dream_team = generate_dream_team_table()
+    return render_template("dream-team.html", dream_team=dream_team)
 
 
 @app.route("/teams")
