@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-striped table-dark">
   <thead>
     <tr>
       {% for col in headings %}
@@ -8,7 +8,7 @@
   </thead>
   <tbody>
     {% for i, row in df.iterrows() %}
-    <tr>
+    <tr >
       {% for val in row[:] %}
       <td> {{val}}</td>
       {% endfor %}
