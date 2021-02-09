@@ -147,13 +147,5 @@ def generate_team_roster_table(team_name):
         raise Exception(f"Couldn't find '{team_name}' on the TeamList")
 
 
-
-
-
-###-------------------------------------------------------------
-# Tables for Player Breakdowns page
-###-------------------------------------------------------------
-
-
 if __name__ == "__main__":
     pass
