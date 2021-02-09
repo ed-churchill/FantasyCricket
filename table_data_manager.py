@@ -113,21 +113,19 @@ def generate_dream_team_table():
 # Tables for Teams page
 ###-------------------------------------------------------------
 
-def generate_team_roster_table(team_name):
+def generate_team_roster_table(team_name, team_list_df):
     """Generates a html table of a given team's roster
     
-    :param team_name The team name to get the roster of"""
-
-    # Get TeamList as dataframe
-    team_list = get_sheet_df("TeamList")
+    :param team_name The team name to get the roster of
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
 
     # Get team names as a list
-    team_names = list(team_list['Team Name'])
+    team_names = list(team_list_df['Team Name'])
 
     # Trim the data to only get the players, not the points
-    team_list.drop(['Team Name', 'Team Owner', 'Week 1 Points', 'Week 2 Points', 'Week 3 Points', 'Week 4 Points', 
+    team_list = team_list_df.drop(['Team Name', 'Team Owner', 'Week 1 Points', 'Week 2 Points', 'Week 3 Points', 'Week 4 Points', 
                     'Week 5 Points', 'Week 6 Points', 'Week 7 Points', 'Week 8 Points', 'Week 9 Points',
-                     'Week 10 Points', 'Total Points'], axis=1, inplace=True)
+                     'Week 10 Points', 'Total Points'], axis=1)
 
     # Get the relevant row of the dataframe, otherwise throw an exception if the team is not found
     if team_name in team_names:

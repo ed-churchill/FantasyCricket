@@ -8,20 +8,18 @@ from table_data_manager import numbers_to_names, get_sheet_df
 # Graph data for Teams page
 ###-------------------------------------------------------------
 
-def team_points_df(team_name):
+def team_points_df(team_name, team_list_df):
     """Returns a dataframe giving a weekly breakdown of a team's total points
     
-    :param team_name The team name to get the weekly points breakdown for"""
-
-    # Get TeamList as dataframe
-    team_list = get_sheet_df("TeamList")
+    :param team_name The team name to get the weekly points breakdown of
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
 
     # Get team names as a list
-    team_names = list(team_list['Team Name'])
-
+    team_names = list(team_list_df['Team Name'])
+    
     # Trim the data to get the weekly points only
-    team_list.drop(['Team Name', 'Team Owner', 'Batsman 1', 'Batsman 2', 'Batsman 3', 'Batsman 4', 'All-Rounder 1','All-Rounder 2', 'All-Rounder 3', 
-                    'Wicket-keeper', 'Bowler 1', 'Bowler 2', 'Bowler 3', 'Total Points'], axis=1, inplace=True)
+    team_list = team_list_df.drop(['Team Name', 'Team Owner', 'Batsman 1', 'Batsman 2', 'Batsman 3', 'Batsman 4', 'All-Rounder 1','All-Rounder 2', 'All-Rounder 3', 
+                    'Wicket-keeper', 'Bowler 1', 'Bowler 2', 'Bowler 3', 'Total Points'], axis=1)
 
     # Get the correct row of the dataframe, otherwise throw an exception if the team was not found
     if team_name in team_names:
@@ -44,7 +42,8 @@ def team_points_df(team_name):
 
 
 if __name__ == "__main__":
-    team_points_df('Test1 CC')
+    team_list_df = get_sheet_df('TeamList')
+    print(team_points_df('Test1 CC', team_list_df))
 
 
 
