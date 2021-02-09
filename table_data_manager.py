@@ -121,7 +121,7 @@ def generate_team_roster_table(team_name):
     # Get TeamList as dataframe
     team_list = get_sheet_df("TeamList")
 
-    # Get relevant row of dataframe for team, or throw exception if team name was not found
+    # Get team names as a list
     team_names = list(team_list['Team Name'])
 
     # Trim the data to only get the players, not the points
