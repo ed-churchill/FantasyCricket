@@ -1,13 +1,11 @@
 from flask import Flask, render_template
-from table_data_manager import generate_table_sheet, generate_league_table, generate_team_roster_table, generate_dream_team_table, get_sheet_df
-from graph_data_manager import team_points_df
+from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table
+from graph_data_manager import team_points_df, top_n_league_graph, team_points_graph
 
 import gspread
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 import os
-import pygal
-from pygal.style import DarkGreenBlueStyle
 
 app = Flask(__name__)
 
@@ -17,8 +15,11 @@ app = Flask(__name__)
 # -------------------------------------------------------------------------------
 @app.route("/")
 def home():
-    table = generate_league_table()
-    return render_template("index.html", league_table=table)
+    table_df = generate_league_table_df()
+    table = generate_table(table_df)
+    graph = top_n_league_graph(5, table_df)
+
+    return render_template("index.html", league_table=table, league_graph=graph)
 
 
 @app.route("/about")
@@ -37,14 +38,9 @@ def teams():
     team_list = get_sheet_df("TeamList")
     team_roster = generate_team_roster_table("Test1 CC", team_list)
 
-    team_points = team_points_df("Test1 CC", team_list)
-    graph = pygal.Bar(style=DarkGreenBlueStyle)
-    graph.title = "Team points"
-    graph.x_labels = [f"Week {x}" for x in range(1, 11)]
-    graph.add("Points", team_points.iloc[0])
-    graph_data = graph.render_data_uri()
+    graph = team_points_graph("Test1 CC", team_list)
 
-    return render_template("teams.html", team_roster=team_roster, chart=graph_data)
+    return render_template("teams.html", team_roster=team_roster, graph=graph)
 
 
 @app.route("/player-breakdowns")

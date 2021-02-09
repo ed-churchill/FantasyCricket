@@ -60,7 +60,7 @@ def generate_table(df):
 # Tables for Home page
 ###-------------------------------------------------------------
 
-def generate_league_table():
+def generate_league_table_df():
     """Generates a html table of the current Fantasy Cricket League Table."""
 
     # Get TeanList Sheet as dataframe
@@ -73,7 +73,7 @@ def generate_league_table():
     
     # Sort table in descending order of points
     league_table = team_list.sort_values(by=['Total Points'], ascending=False)
-    return generate_table(league_table)
+    return league_table
 
 
 ###-------------------------------------------------------------
