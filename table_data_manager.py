@@ -140,6 +140,7 @@ def generate_team_roster_table(team_name, team_list_df):
         team_roster = team_roster.T
 
         # Convert numbers to list of player names
+        team_roster.columns = [0]
         numbers = list(team_roster[0])
         player_names = numbers_to_names(numbers)
 

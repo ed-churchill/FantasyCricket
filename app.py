@@ -16,7 +16,7 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     table_df = generate_league_table_df()
-    table = generate_table(table_df, link_columns=[("Team Name", "teams"), ("Team Owner", "player")])
+    table = generate_table(table_df, link_columns=[("Team Name", "teams"), ("Team Owner", "players")])
     graph = top_n_league_graph(5, table_df)
 
     return render_template("index.html", league_table=table, league_graph=graph)
@@ -35,17 +35,30 @@ def dream_team():
 
 @app.route("/teams")
 def teams():
+    return render_template("teams.html")
+
+@app.route("/teams/<name>")
+def team_stats(name):
+    team_name = name.replace('-', ' ')
+
     team_list = get_sheet_df("TeamList")
-    team_roster = generate_team_roster_table("Test1 CC", team_list)
+    team_roster = generate_team_roster_table(team_name, team_list)
 
-    graph = team_points_graph("Test1 CC", team_list)
+    graph = team_points_graph(team_name, team_list)
 
-    return render_template("teams.html", team_roster=team_roster, graph=graph)
+    return render_template("team-stats.html", team_roster=team_roster, graph=graph)
 
 
-@app.route("/player-breakdowns")
+@app.route("/players")
 def player_breakdowns():
-    return render_template("player-breakdowns.html")
+    return render_template("players.html")
+
+@app.route("/players/<name>")
+def player_stats(name):
+    name = name.replace('-', ' ')
+
+# TODO: create a player stats page
+    return render_template("player-stats.html")
 
 
 @app.before_first_request

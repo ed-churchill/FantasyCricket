@@ -48,8 +48,7 @@ def top_n_league_graph(n, league_df):
 # Graph data for Teams page
 ###-------------------------------------------------------------
 def team_points_graph(team_name, team_list_df):
-    
-    team_points = team_points_df("Test1 CC", team_list_df)
+    team_points = team_points_df(team_name, team_list_df)
     graph = pygal.Bar(style=DarkGreenBlueStyle)
     graph.title = "Team points"
     graph.x_labels = [f"Week {x}" for x in range(1, 11)]
