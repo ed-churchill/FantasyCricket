@@ -1,10 +1,13 @@
 from flask import Flask, render_template
 from table_data_manager import generate_table_sheet, generate_league_table, generate_team_roster_table, generate_dream_team_table, get_sheet_df
+from graph_data_manager import team_points_df
 
 import gspread
 import pandas as pd
 from oauth2client.service_account import ServiceAccountCredentials
 import os
+import pygal
+from pygal.style import DarkGreenBlueStyle
 
 app = Flask(__name__)
 
@@ -33,7 +36,15 @@ def dream_team():
 def teams():
     team_list = get_sheet_df("TeamList")
     team_roster = generate_team_roster_table("Test1 CC", team_list)
-    return render_template("teams.html", team_roster=team_roster)
+
+    team_points = team_points_df("Test1 CC", team_list)
+    graph = pygal.Bar(style=DarkGreenBlueStyle)
+    graph.title = "Team points"
+    graph.x_labels = [f"Week {x}" for x in range(1, 11)]
+    graph.add("Points", team_points.iloc[0])
+    graph_data = graph.render_data_uri()
+
+    return render_template("teams.html", team_roster=team_roster, chart=graph_data)
 
 
 @app.route("/player-breakdowns")

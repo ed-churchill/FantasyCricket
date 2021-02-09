@@ -1,53 +1,64 @@
 <!doctype html>
 
 <html>
-  <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.scss')}}">
-{#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">#}
-<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">    <title>Fantasy Cricket</title>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
 
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href=".">Home</a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link" href="about">About</a>
-            </li>
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.scss')}}">
+  {#
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">#}
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+  <title>Fantasy Cricket</title>
+</head>
 
-            <li class="nav-item">
-              <a class="nav-link" href="dream-team">Dream Team</a>
-            </li>
+<body style="background: rgb(20, 20, 20)">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
 
-            <li class="nav-item">
-              <a class="nav-link" href="teams">Teams</a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href=".">Home</a>
+          </li>
 
-            <li class="nav-item">
-              <a class="nav-link" href="player-breakdowns">Player Breakdowns</a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about">About</a>
+          </li>
 
-          </ul>
-        </div>
+          <li class="nav-item">
+            <a class="nav-link" href="dream-team">Dream Team</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="teams">Teams</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="player-breakdowns">Player Breakdowns</a>
+          </li>
+
+        </ul>
       </div>
-    </nav>
-    
+    </div>
+  </nav>
 
 
 
-    {% block  content %}{% endblock %}
+  <div class="container" >
+    {% block content %}{% endblock %}
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+    crossorigin="anonymous"></script>
+</body>
+
 </html>

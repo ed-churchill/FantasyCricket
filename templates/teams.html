@@ -1,4 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
+
+
+<div class="row">
+  <div id="chart" class="col-8 mx-auto text-center">
+    <embed type="image/svg+xml" src={{ chart|safe }} style="max-width: 1000px;" />
+  </div>
+</div>
+
 {{ team_roster|safe }}
 {% endblock %}
