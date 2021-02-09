@@ -47,13 +47,17 @@ def generate_table_sheet(sheet):
     df = get_sheet_df(sheet)
     return generate_table(df)
 
-def generate_table(df):
+def generate_table(df, link_columns=[]):
     """Generates a html table of the given dataframe
     
-    :param df The dataframe to generate a html table from"""
+    :param df The dataframe to generate a html table from
+    :param link_columns list of (column name, prefix) tuples"""
     
     headings = list(df.columns)
-    return render_template("table-template.html", df=df, headings=headings)
+    # list of column names -> list of column indices
+    link_columns_indices = [headings.index(x) for x, y in link_columns]
+    link_columns_prefixes = [y for x, y in link_columns]
+    return render_template("table-template.html", df=df, headings=headings, link_column_indices=link_columns_indices, link_columns_prefixes=link_columns_prefixes)
 
 
 ###-------------------------------------------------------------

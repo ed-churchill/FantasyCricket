@@ -16,7 +16,7 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     table_df = generate_league_table_df()
-    table = generate_table(table_df)
+    table = generate_table(table_df, link_columns=[("Team Name", "teams"), ("Team Owner", "player")])
     graph = top_n_league_graph(5, table_df)
 
     return render_template("index.html", league_table=table, league_graph=graph)

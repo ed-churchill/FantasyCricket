@@ -1,0 +1,10 @@
+{% macro table_link(value, column_index, column_name_indices, link_columns_prefixes) %}
+{% if  column_index in column_name_indices%}
+
+{% set index = column_name_indices.index(column_index)%}
+{% if index >= 0 %}
+href="{{link_columns_prefixes[index]}}/{{value.replace(' ', '-')}}"
+{% endif %}
+
+{% endif %}
+{% endmacro %}
