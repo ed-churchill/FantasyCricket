@@ -2,11 +2,14 @@ from flask import render_template_string, render_template
 import pandas as pd
 import os
 
+###---------------------------------------------------------------------
+# Utility functions
+###---------------------------------------------------------------------
+
 def numbers_to_names(numbers):
-    """Returns a list of the names of players in the given number order
+    """Returns a list of the names of players with the given numbers
     
-    :param numbers The list of Player Numbers to get the names of
-    :param total_stats The dataframe of the TotalStats spreadsheet (obtain this """
+    :param numbers The list of Player Numbers to get the names of"""
 
     # Get total stats spreadsheet
     total_stats = get_sheet_df('TotalStats')
@@ -51,6 +54,7 @@ def generate_table(df):
     
     headings = list(df.columns)
     return render_template("table-template.html", df=df, headings=headings)
+
 
 ###-------------------------------------------------------------
 # Tables for Home page
@@ -103,8 +107,6 @@ def generate_dream_team_table():
     dream_team = pd.concat([batsmen.head(4), all_rounders.head(3), wicket_keepers.head(1), bowlers.head(3)])
 
     return generate_table(dream_team)
-
-
 
 
 ###-------------------------------------------------------------

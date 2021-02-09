@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from data_manager import generate_table_sheet, generate_league_table, generate_team_roster_table, generate_dream_team_table
+from table_data_manager import generate_table_sheet, generate_league_table, generate_team_roster_table, generate_dream_team_table
 
 import gspread
 import pandas as pd
