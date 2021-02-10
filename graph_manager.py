@@ -43,6 +43,60 @@ def count_trailing_zeros(ls):
 # Graph data for Home page
 ###-------------------------------------------------------------
 
+def role_pie_chart(total_stats_df):
+    """Returns a pie chart with 4 sectors: Batsmen, Bowlers, All-Rounders, Wicket-Keepers
+    
+    :param total_stats_df The dataframe containing the data needed (in this case we will have total_stats_df = get_sheet_df('TotalStats') """
+
+    # Get the Player Role column
+    player_roles = total_stats_df['Player Role']
+
+    # Count occurences of each role
+    count_role_df = list(player_roles.value_counts())
+    bowler_count = count_role_df[0]
+    batsman_count = count_role_df[1]
+    all_rounder_count = count_role_df[2]
+    keeper_count = count_role_df[3]
+
+    # Generate the pie chart
+    pie_chart = pygal.Pie(style=style)
+    pie_chart.title = "Role Count"
+    pie_chart.add('Bowlers', bowler_count)
+    pie_chart.add('Batsmen', batsman_count)
+    pie_chart.add('All-Rounders', all_rounder_count)
+    pie_chart.add('Wicket-Keepers', keeper_count)
+
+    # Render pie chart
+    pie_data = pie_chart.render_data_uri()
+    return pie_data
+    
+def mvp_radar_graph(total_stats_df):
+    """Returns a radar graph for the MVP (person with the most total points). The radar graph breaks down their points by batting, bowling, fielding and bonus
+    
+    param total_stats_df The dataframe containing the data needed (in this case we will have total_stats_df = get_sheet_df('TotalStats')"""
+
+    # Discard unecessary columns so we're left with Player Name, Player Role and their points in each category (and total points)
+    total_stats = total_stats_df.drop(['Player Number', 'GAMES', 'RUNS', '4s', '6s', '50s', '100s', '150s', '200s', 'DUCKS', 'OVERS',
+                        'BALLS', 'WICKETS', 'RUNS AGAINST', 'MAIDENS', '3fers/4fers', '5fers', '6+fers',
+                        'CATCHES', 'RUN-OUTS', 'STUMPINGS', 'MOTM', 'WINS'], axis=1)
+    
+
+    # Sort data in decreasing order of total points and get the person with highest total points
+    total_stats.sort_values(by=['TOTAL'], ascending=False, inplace=True)
+    mvp_stats = list(total_stats.iloc[0])
+    
+    # Generate the radar chart
+    mvp_name = mvp_stats[0]
+    radar_chart = pygal.Radar(style=style)
+    radar_chart.title = f"MVP {mvp_name}'s' points by category."
+    radar_chart.x_labels = ['Batting Points', 'Bowling Points', 'Fielding Points', 'Bonus Points']
+    radar_chart.add(mvp_name, mvp_stats[2:6])
+
+    # Render the radar chart
+    radar_graph_data = radar_chart.render_data_uri()
+    return radar_graph_data
+
+
 def top_n_league_graph(n, league_df):
     """Returns a line graph with n lines. The graph gives the cumulative weekly points breakdown of the current top n teams in the league table
     
@@ -61,8 +115,9 @@ def top_n_league_graph(n, league_df):
     data = [cumulative(x)[:-min_zeros] for x in data]
 
     # Style the graph 
-    graph = pygal.Line(style=style)
-    graph.title = f"Weekly total points of current top {n} teams in the league"
+    graph = pygal.Line(style=style, margin=35)
+    graph.title = f"Current Top {n} Tracker"
+    graph.y_title = "Total Points"
     graph.x_labels = [f"Week {x}" for x in range(1, 11)]
     
     # Add the data to the graph
@@ -130,9 +185,10 @@ def team_points_df(team_name, team_list_df):
 
 
 if __name__ == "__main__":
-    # team_list_df = get_sheet_df('TeamList')
-    # print(team_points_df('Test1 CC', team_list_df))
-    pass
+    total_stats_df = get_sheet_df('TotalStats')
+    mvp_radar_graph(total_stats_df)
+
+    
 
 
 

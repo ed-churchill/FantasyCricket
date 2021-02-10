@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table
-from graph_manager import team_points_df, top_n_league_graph, team_points_graph
+from graph_manager import team_points_df, top_n_league_graph, team_points_graph, role_pie_chart, mvp_radar_graph
 
 import gspread
 import pandas as pd
@@ -15,11 +15,19 @@ app = Flask(__name__)
 # -------------------------------------------------------------------------------
 @app.route("/")
 def home():
+    # Dataframes
     table_df = generate_league_table_df()
+    total_stats_df = get_sheet_df('TotalStats')
+    
+    # Generate tables
     table = generate_table(table_df, link_columns=[("Team Name", "teams"), ("Team Owner", "players")])
+    
+    # Generate graphs
     graph = top_n_league_graph(5, table_df)
+    pie_chart = role_pie_chart(total_stats_df)
+    radar_graph = mvp_radar_graph(total_stats_df)
 
-    return render_template("index.html", league_table=table, league_graph=graph)
+    return render_template("index.html", league_table=table, league_graph=graph, role_pie_chart=pie_chart, mvp_radar_graph=radar_graph)
 
 
 @app.route("/about")
