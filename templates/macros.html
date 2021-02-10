@@ -10,10 +10,10 @@ href="{{link_columns_prefixes[index]}}/{{value.replace(' ', '-')}}"
 {% endmacro %}
 
 
-{% macro nav_link(endpoint, name) %}
+{% macro nav_link(endpoint) %}
 {% if request.endpoint.endswith(endpoint) %}
-  <li class="active"><a href="{{ url_for(endpoint) }}">{{name}}</a></li>
+  class="nav-link active" aria-current="page"
 {% else %}
-  <li><a href="{{ url_for(endpoint) }}">{{name}}</a></li>
+  class="nav-link"
 {% endif %}
 {% endmacro %}
