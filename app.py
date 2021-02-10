@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table
-from graph_data_manager import team_points_df, top_n_league_graph, team_points_graph
+from graph_manager import team_points_df, top_n_league_graph, team_points_graph
 
 import gspread
 import pandas as pd

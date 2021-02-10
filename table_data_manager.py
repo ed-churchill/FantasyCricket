@@ -44,19 +44,29 @@ def generate_table_sheet(sheet):
     
     :param sheet The name of the sheet to be converted (name of the csv file without the extension '.csv')"""
 
+    # Get the sheet as a dataframe
     df = get_sheet_df(sheet)
+
+    # Generate table of dataframe
     return generate_table(df)
 
 def generate_table(df, link_columns=[]):
     """Generates a html table of the given dataframe
     
     :param df The dataframe to generate a html table from
-    :param link_columns list of (column name, prefix) tuples"""
-    
+    :param link_columns A list where each element is a tuple of the form (column name, prefix). The column name is the name of the column whose elements we want to be links.
+    The prefix is the page name that would naturally come before the link (e.g If the column name was 'Team Name', the corresponding prefix would be 'teams'. If the column
+    name was 'Player Name', the corresponding prefix would be 'players"""
+
+    # Get table headings from dataframe
     headings = list(df.columns)
-    # list of column names -> list of column indices
+    
+    # Get index (in the list headings) of the column names that we want to link
     link_columns_indices = [headings.index(x) for x, y in link_columns]
+
+    # Ger prefixes of the column names that we want to link
     link_columns_prefixes = [y for x, y in link_columns]
+    
     return render_template("table-template.html", df=df, headings=headings, link_column_indices=link_columns_indices, link_columns_prefixes=link_columns_prefixes)
 
 
@@ -65,7 +75,7 @@ def generate_table(df, link_columns=[]):
 ###-------------------------------------------------------------
 
 def generate_league_table_df():
-    """Generates a html table of the current Fantasy Cricket League Table."""
+    """Generates a dataframe of the current Fantasy Cricket League Table."""
 
     # Get TeanList Sheet as dataframe
     team_list = get_sheet_df("TeamList")
