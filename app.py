@@ -1,6 +1,6 @@
 from flask import Flask, render_template
-from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table
-from graph_manager import team_points_df, top_n_league_graph, team_points_graph, role_pie_chart, mvp_radar_graph
+from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner
+from graph_manager import team_points_df, top_n_league_graph, team_points_bar_graph, team_points_line_graph, role_pie_chart, mvp_radar_graph, team_roster_radar_graph
 
 import gspread
 import pandas as pd
@@ -47,14 +47,30 @@ def teams():
 
 @app.route("/teams/<name>")
 def team_stats(name):
+    # Remove dash in team name for display purposes
     team_name = name.replace('-', ' ')
 
+    # Get the TeamList and TotalStats sheets as dataframes
     team_list = get_sheet_df("TeamList")
+    total_stats = get_sheet_df("TotalStats")
+
+    # Get the team owner
+    team_owner = team_to_owner(team_name, team_list)
+
+    # Generate the team roster table
     team_roster = generate_team_roster_table(team_name, team_list)
 
-    graph = team_points_graph(team_name, team_list)
+    # Generate the weekly points bar graph for the team
+    bar_graph = team_points_bar_graph(team_name, team_list)
 
-    return render_template("team-stats.html", team_roster=team_roster, graph=graph)
+    # Generate the weekly points cumulative line graph for the team
+    line_graph = team_points_line_graph(team_name, team_list)
+
+    # Generate the team roster radar graph
+    radar_graph = team_roster_radar_graph(team_name, team_list, total_stats)
+
+
+    return render_template("team-stats.html", team_name=team_name, team_owner=team_owner, team_roster=team_roster, bar_graph=bar_graph, line_graph=line_graph, radar_graph=radar_graph)
 
 
 @app.route("/players")

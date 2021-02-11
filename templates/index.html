@@ -2,7 +2,7 @@
 {% block content %}
 
   <h1 class="text-center text-white display-3">Welcome to UWMCC BUCS Fantasy Cricket!</h1>
-  <div class="row p-3">
+  <div class="row p-3 bg-primary">
     <!--Left Column-->
     <div class="col-lg p-3">
       <h3 class="text-white display-5"><b>League Table</b></h3>
@@ -12,15 +12,15 @@
     <div class="col-lg p-3">
       <h3 class="text-white display-5"><b>Useful Data</h3>
         <!--Top 5 teams graph-->
-      <div id="chart" class="text-center">
+      <div id="chart" class="text-center p-3">
         <embed type="image/svg+xml" src={{ league_graph|safe }}>
       </div>
       <!--Role Pie Chart-->
-      <div id="chart" class="text-center">
+      <div id="chart" class="text-center p-3">
         <embed type="image/svg+xml" src={{ role_pie_chart|safe }}>
       </div>
        <!--MVP Radar graph-->
-       <div id="chart" class="text-center">
+       <div id="chart" class="text-center p-3">
         <embed type="image/svg+xml" src={{ mvp_radar_graph|safe }}>
       </div>
     </div>

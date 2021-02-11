@@ -70,6 +70,25 @@ def generate_table(df, link_columns=[]):
     return render_template("table-template.html", df=df, headings=headings, link_column_indices=link_columns_indices, link_columns_prefixes=link_columns_prefixes)
 
 
+def team_to_owner(team_name, team_list_df):
+    """Returns the team owner corresponding to the given team_name in the 'TeamList' spreadsheet
+    
+    :param team_name The team name to get the owner of
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
+
+    # Get Team Names and Team Owners and strip the items
+    names = list(team_list_df['Team Name'])
+    names = [x.strip() for x in names]
+    owners = list(team_list_df['Team Owner'])
+    owners = [x.strip() for x in owners]
+
+    # Find owner, or throw exception if team name was not found
+    if team_name in names:
+        return owners[names.index(team_name)]
+    else:
+        raise Exception(f"Couldn't find {team_name} in the list of team names")
+
+
 ###-------------------------------------------------------------
 # Tables for Home page
 ###-------------------------------------------------------------
@@ -163,4 +182,5 @@ def generate_team_roster_table(team_name, team_list_df):
 
 
 if __name__ == "__main__":
-    pass
+    team_list = get_sheet_df("TeamList")
+    team_to_owner("Test1 CC", team_list)

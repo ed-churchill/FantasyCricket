@@ -131,7 +131,7 @@ def top_n_league_graph(n, league_df):
 ###-------------------------------------------------------------
 # Graph data for Teams page
 ###-------------------------------------------------------------
-def team_points_graph(team_name, team_list_df):
+def team_points_bar_graph(team_name, team_list_df):
     """Returns a bar graph giving the weekly breakdown of points for a specific team
     
     :param team_name The team name to generate the graph of
@@ -176,6 +176,66 @@ def team_points_df(team_name, team_list_df):
     else:
         raise Exception(f"Couldn't find '{team_name}' on the TeamList")
 
+def team_points_line_graph(team_name, team_list_df):
+    """Returns a line graph giving the cumulative weekly breakdown of points for a specific team
+    
+    :param team_name The team name to generate the graph of
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
+    
+    # Get the weekly points in a list and remove trailing zeros
+    team_points = list(team_points_df(team_name, team_list_df).iloc[0])
+    trailing_zeros = count_trailing_zeros(team_points)
+    team_points = team_points[:-trailing_zeros]
+
+    # Convert to cumulative data
+    cumulative_points = cumulative(team_points)
+
+    # Generate the graph
+    graph = pygal.Line(style=style)
+    graph.title = f"{team_name} Points Tracker"
+    graph.x_labels = [f"Week {x}" for x in range(1, 11)]
+    graph.add("Points", cumulative_points)
+    graph_data = graph.render_data_uri()
+    return graph_data
+
+def team_roster_radar_graph(team_name, team_list_df, total_stats_df):
+    """Returns a radar graph with 11 lines, giving the points by category breakdown for each player
+    
+    :param team_name The team name to generate the graph of
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')
+    :param team_list_df The dataframe containing the data needed (in this case we will have total_stats_df = get_sheet_df('TotalStats')"""
+
+    # Trim the data to get the team names and rosters only
+    team_rosters = team_list_df.drop(['Team Owner', 'Week 1 Points', 'Week 2 Points', 'Week 3 Points', 'Week 4 Points', 'Week 5 Points', 'Week 6 Points', 
+                                    'Week 7 Points', 'Week 8 Points', 'Week 9 Points', 'Week 10 Points', 'Total Points'], axis=1)
+    team_names = list(team_rosters['Team Name'])
+
+    # Get the correct team roster as a list of names, otherwise throw an exception if the team was not found
+    if team_name in team_names:
+        row_index = team_names.index(team_name)
+        team_roster = list(team_rosters.iloc[row_index])[1:]
+    else:
+        raise Exception(f"Couldn't find '{team_name}' on the TeamList")
+    
+    # Get the batting, bowling, fielding and bonus points of everyone in the roster (stored in a list of tuples)
+    team_roster_points = [(total_stats_df['BATTING'][x-1], 
+                        total_stats_df['BOWLING'][x-1], 
+                        total_stats_df['FIELDING'][x-1],
+                        total_stats_df['BONUS'][x-1]) for x in team_roster]
+    print(team_roster_points)
+
+    # Generate the radar graph
+    radar_graph = pygal.Radar(style=style)
+    radar_graph.title = f"{team_name} Player Points Comparer \n (Tick/untick players to compare)"
+    radar_graph.x_labels = ['Batting Points', 'Bowling Points', 'Fielding Points', 'Bonus Points']
+    
+    # Add data and return
+    player_names = numbers_to_names(team_roster)
+    for i, name in enumerate(player_names):
+        radar_graph.add(name, team_roster_points[i])
+    
+    radar_graph_data = radar_graph.render_data_uri()
+    return radar_graph_data
 
 
 
@@ -185,9 +245,9 @@ def team_points_df(team_name, team_list_df):
 
 
 if __name__ == "__main__":
+    team_list_df = get_sheet_df('TeamList')
     total_stats_df = get_sheet_df('TotalStats')
-    mvp_radar_graph(total_stats_df)
-
+    team_roster_radar_graph("Test1 CC", team_list_df, total_stats_df)
     
 
 
