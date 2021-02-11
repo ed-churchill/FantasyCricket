@@ -141,7 +141,7 @@ def team_points_bar_graph(team_name, team_list_df):
     team_points = team_points_df(team_name, team_list_df)
 
     # Style the graph
-    graph = pygal.Bar(style=style)
+    graph = pygal.Bar(style=style, show_legend=False)
     graph.title = f"{team_name} Weekly Points"
     graph.x_labels = [f"Week {x}" for x in range(1, 11)]
 
@@ -191,7 +191,7 @@ def team_points_line_graph(team_name, team_list_df):
     cumulative_points = cumulative(team_points)
 
     # Generate the graph
-    graph = pygal.Line(style=style)
+    graph = pygal.Line(style=style, show_legend=False)
     graph.title = f"{team_name} Points Tracker"
     graph.x_labels = [f"Week {x}" for x in range(1, 11)]
     graph.add("Points", cumulative_points)
