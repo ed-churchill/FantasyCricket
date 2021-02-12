@@ -232,7 +232,7 @@ def generate_team_roster_table(team_name, team_list_df):
 # Tables for Player-stats page
 ###-------------------------------------------------------------
 def generate_picks_table(player_name, team_list_df):
-    """Returns a table containing which teams picked the given player
+    """Returns a table containing which teams picked the given player, Returns an empty string if the player was not picked by anyone
     
     :param team_name The player name to generate the picks table of
     :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
@@ -240,12 +240,12 @@ def generate_picks_table(player_name, team_list_df):
     # Get the teams that picked the given player
     picks = name_to_picks(player_name, team_list_df)[0]
     
-    # Create the dataframe
-    df = pd.DataFrame(picks, columns=['Team Name', 'Team Owner'])
-
-    # Generate the table from the dataframe
-    return generate_table(df)
-
+    # Generate table if picks is non-empty
+    if picks:
+        df = pd.DataFrame(picks, columns=['Team Name', 'Team Owner'])
+        return generate_table(df)
+    else: 
+        return ""
 
 if __name__ == "__main__":
     team_list = get_sheet_df("TeamList")
