@@ -129,7 +129,7 @@ def top_n_league_graph(n, league_df):
     return graph_data
 
 ###-------------------------------------------------------------
-# Graph data for Teams page
+# Graph data for Team-Stats page
 ###-------------------------------------------------------------
 def team_points_bar_graph(team_name, team_list_df):
     """Returns a bar graph giving the weekly breakdown of points for a specific team
@@ -240,15 +240,12 @@ def team_roster_radar_graph(team_name, team_list_df, total_stats_df):
 
 
 ###-------------------------------------------------------------
-# Graph data for Player Breakdowns page
+# Graph data for Player-stats page
 ###-------------------------------------------------------------
 
 
 if __name__ == "__main__":
-    team_list_df = get_sheet_df('TeamList')
-    total_stats_df = get_sheet_df('TotalStats')
-    team_roster_radar_graph("Test1 CC", team_list_df, total_stats_df)
-    
+    pass    
 
 
 
