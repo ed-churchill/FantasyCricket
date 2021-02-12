@@ -125,7 +125,6 @@ def name_to_picks(player_name, team_list_df):
         # Get team roster
         roster = list(row)[3:]
         roster = numbers_to_names(roster)
-        print(roster)
 
         # Check if the player is in the team
         if player_name in roster:
