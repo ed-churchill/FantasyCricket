@@ -238,7 +238,7 @@
 }
 
 .border-secondary {
-  border-color: #6c757d !important;
+  border-color: #0dcaf0 !important;
 }
 
 .border-success {
@@ -1024,7 +1024,7 @@
 }
 
 .text-secondary {
-  color: #6c757d !important;
+  color: #0dcaf0 !important;
 }
 
 .text-success {
@@ -1096,7 +1096,7 @@
 }
 
 .bg-secondary {
-  background-color: #6c757d !important;
+  background-color: #0dcaf0 !important;
 }
 
 .bg-success {
