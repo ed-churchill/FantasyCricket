@@ -74,15 +74,15 @@ def team_stats(name):
 
 
 @app.route("/players")
-def player_breakdowns():
+def players():
     return render_template("players.html")
 
 @app.route("/players/<name>")
 def player_stats(name):
-    name = name.replace('-', ' ')
+    # Remove dash in player name for disp;ay purposes
+    player_name = name.replace('-', ' ')
 
-# TODO: create a player stats page
-    return render_template("player-stats.html")
+    return render_template("player-stats.html", player_name=player_name)
 
 
 @app.before_first_request

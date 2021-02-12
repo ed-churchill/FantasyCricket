@@ -27,6 +27,28 @@ def numbers_to_names(numbers):
 
     return [number_to_name(x) for x in numbers]
 
+def names_to_numbers(names):
+    """Returns a list of the numbers of players with the given names
+    
+    :param numbers The list of Player names to get the numbers of"""
+    
+    # Get total stats spreadsheet
+    total_stats = get_sheet_df('TotalStats')
+
+    # Get relevant columns
+    nums_and_names = total_stats[['Player Number', 'Player Name']]
+    player_names = list(nums_and_names['Player Name'])
+
+    # Get player number, or throw exception if the number is out of range
+    def name_to_number(name):
+        if name in player_names:
+            player_num = player_names.index(name) + 1
+            return player_num
+        else:
+            raise Exception(f"The player {name} was not found. Check the player name matches one on the sheet")
+    
+    return [name_to_number(name) for name in names]
+
 def get_sheet_df(sheet):
     """Returns the given sheet as a dataframe
     
@@ -88,6 +110,31 @@ def team_to_owner(team_name, team_list_df):
     else:
         raise Exception(f"Couldn't find {team_name} in the list of team names")
 
+def name_to_picks(player_name, team_list_df):
+    """Returns a list of tuples, each of the form (team_name, team_owner), where each tuple corresponds to a team that picked the given player
+    
+    :param player_name The player to get the picks of
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
+
+    # Get team rosters
+    team_rosters = team_list_df.drop(['Week 1 Points', 'Week 2 Points', 'Week 3 Points', 'Week 4 Points', 'Week 5 Points', 'Week 6 Points',
+                                    'Week 7 Points', 'Week 8 Points', 'Week 9 Points', 'Week 10 Points', 'Total Points'], axis=1)
+
+    picks = []                 
+    for i, row in team_rosters.iterrows():
+        # Get team roster
+        roster = list(row)[3:]
+        roster = numbers_to_names(roster)
+        print(roster)
+
+        # Check if the player is in the team
+        if player_name in roster:
+            picks.append((row['Team Name'], row['Team Owner']))
+            
+    return picks
+
+    
+
 
 ###-------------------------------------------------------------
 # Tables for Home page
@@ -143,7 +190,7 @@ def generate_dream_team_table():
 
 
 ###-------------------------------------------------------------
-# Tables for Teams page
+# Tables for Team-stats page
 ###-------------------------------------------------------------
 
 def generate_team_roster_table(team_name, team_list_df):
@@ -183,4 +230,4 @@ def generate_team_roster_table(team_name, team_list_df):
 
 if __name__ == "__main__":
     team_list = get_sheet_df("TeamList")
-    team_to_owner("Test1 CC", team_list)
+    print(name_to_picks('Nathan Sharpe', team_list))

@@ -238,10 +238,11 @@ def team_roster_radar_graph(team_name, team_list_df, total_stats_df):
     return radar_graph_data
 
 
-
 ###-------------------------------------------------------------
 # Graph data for Player-stats page
 ###-------------------------------------------------------------
+
+
 
 
 if __name__ == "__main__":
