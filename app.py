@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner, generate_picks_table, name_to_picks
-from graph_manager import team_points_df, top_n_league_graph, team_points_bar_graph, team_points_line_graph, role_pie_chart, mvp_radar_graph, team_roster_radar_graph
+from graph_manager import team_points_df, top_n_league_graph, team_points_bar_graph, team_points_line_graph, role_pie_chart, mvp_radar_graph, team_roster_radar_graph, player_points_df, player_points_bar_graph, player_points_line_graph
 
 import gspread
 import pandas as pd
@@ -85,11 +85,25 @@ def player_stats(name):
     # Get the TeamList sheet as a dataframe
     team_list = get_sheet_df('TeamList')
 
+    # Get the weekly sheets and TotalStats sheet as dataframes
+    weekly_dfs = [get_sheet_df('Week1'), get_sheet_df('Week2'), get_sheet_df('Week3'), get_sheet_df('Week4'),
+                get_sheet_df('Week5'), get_sheet_df('Week6'), get_sheet_df('Week7'), get_sheet_df('Week8'), get_sheet_df('Week9'),
+                get_sheet_df('Week10'), get_sheet_df('TotalStats')]
+
+    # Get the player points dataframes
+    player_points = player_points_df(player_name, weekly_dfs)
+
+    # Generate the player points bar graph
+    bar_graph = player_points_bar_graph(player_name, player_points)
+
+    # Generate the player points cumulative line graph
+    line_graph = player_points_line_graph(player_name, player_points)
+
     # Generate the picks table and get the total picks
     picks_table = generate_picks_table(player_name, team_list)
     total_picks = name_to_picks(player_name, team_list)[1]
 
-    return render_template("player-stats.html", player_name=player_name, total_picks=total_picks, picks_table=picks_table)
+    return render_template("player-stats.html", player_name=player_name, bar_graph=bar_graph, line_graph=line_graph, total_picks=total_picks, picks_table=picks_table)
 
 
 @app.before_first_request

@@ -1,6 +1,7 @@
 from table_data_manager import numbers_to_names, get_sheet_df, generate_league_table_df
 import pygal
 from pygal.style import DarkGreenBlueStyle, DefaultStyle, DarkStyle
+import pandas as pd
 
 # DarkStyle class which will be used for all graphs
 style = DarkStyle
@@ -242,11 +243,89 @@ def team_roster_radar_graph(team_name, team_list_df, total_stats_df):
 # Graph data for Player-stats page
 ###-------------------------------------------------------------
 
+def player_points_df(player_name, weekly_dfs):
+    """Returns a dataframe giving a weekly breakdown of a player's total points, splitting the points up by category
+    
+    :param player_name The player name to get the weekly points breakdown of
+    :param weekly_dfs The list of dataframes containing the data needed (in this case we will store Week1, Week2, ..., Week10, TotalStats in the list)"""
 
+    # Get player names as a list from the TotalStats sheet
+    player_names = list(weekly_dfs[10]['Player Name'])
+    
+    # Get the correct row of the dataframe, otherwise throw an exception if the team was not found
+    if player_name in player_names:
+        # Get correct row
+        row_index = player_names.index(player_name)
+    else:
+        raise Exception(f"Couldn't find '{player_name}' on the TotalStats spreadsheet")
 
+    # Get weekly points breakdown by category
+    player_points = []
+    for i in range(0, 10):
+        batting_points = weekly_dfs[i].iloc[row_index]['BATTING']
+        bowling_points = weekly_dfs[i].iloc[row_index]['BOWLING']
+        fielding_points = weekly_dfs[i].iloc[row_index]['FIELDING']
+        bonus_points = weekly_dfs[i].iloc[row_index]['BONUS']
+        
+        player_points.append((batting_points, bowling_points, fielding_points, bonus_points))
+    
+    # Create the dataframe
+    df = pd.DataFrame(player_points, columns=['Batting Points', 'Bowling Points', 'Fielding Points', 'Bonus Points'])
+    return df
+
+def player_points_bar_graph(player_name, player_points_df):
+    """Returns a bar graph giving the weekly points breakdown by category of a given player
+    
+    :param player_name The player to generate the graph of
+    :param player_points_df The dataframe containing the necessary data (in this case we will obtain in from the player_points_df() function"""
+
+    # Style graph
+    bar_graph = pygal.Bar(style=style)
+    bar_graph.title = f"{player_name} points breakdown"
+    bar_graph.x_labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8', 'Week 9', 'Week 10']
+
+    # Add data
+    bar_graph.add('Batting Points', player_points_df['Batting Points'])
+    bar_graph.add('Bowling Points', player_points_df['Bowling Points'])
+    bar_graph.add('Fielding Points', player_points_df['Fielding Points'])
+    bar_graph.add('Bonus Points', player_points_df['Bonus Points'])
+
+    # Render graph
+    graph_data = bar_graph.render_data_uri()
+    return graph_data
+
+def player_points_line_graph(player_name, player_points_df):
+    """Returns a line graph giving the cumulative weekly points of a given player
+
+    :param player_name The player to generate the graph of
+    :param player_points_df The dataframe containing the necessary data (in this case we will obtain in from the player_points_df() function"""
+
+    # Calculate total points each week and store in a list
+    total_points = []
+    for i in range(0, 10):
+        week_points = sum(list(player_points_df.iloc[i]))
+        total_points.append(week_points)
+
+    # REMOVE TRAILING ZEROS
+
+    # Convert to cumulative data
+    cumulative_points = cumulative(total_points)
+
+    # Generate the graph
+    graph = pygal.Line(style=style, show_legend=False)
+    graph.title = f"{player_name} Points Tracker"
+    graph.x_labels = [f"Week {x}" for x in range(1, 11)]
+    graph.add("Points", cumulative_points)
+    graph_data = graph.render_data_uri()
+    return graph_data
 
 if __name__ == "__main__":
-    pass    
+    weekly_dfs = [get_sheet_df('Week1'), get_sheet_df('Week2'), get_sheet_df('Week3'), get_sheet_df('Week4'),
+                get_sheet_df('Week5'), get_sheet_df('Week6'), get_sheet_df('Week7'), get_sheet_df('Week8'), get_sheet_df('Week9'),
+                get_sheet_df('Week10'), get_sheet_df('TotalStats')]
+    player_points = player_points_df("Nathan Sharpe", weekly_dfs)
+    player_points_line_graph("Nathan Sharpe", player_points)
+
 
 
 

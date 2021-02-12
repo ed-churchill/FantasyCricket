@@ -7,9 +7,15 @@
 <div class="row bg-primary">
     <!--Left Column-->
     <div class="col-lg p-3">
+        <div id="chart" class="text-center">
+            <embed type="image/svg+xml" src= {{ bar_graph|safe }} />
+          </div>
     </div>
     <!--Right Column-->
     <div class="col-lg p-3">
+        <div id="chart" class="text-center">
+            <embed type="image/svg+xml" src= {{ line_graph|safe }} />
+          </div>
     </div>
   </div>
   
@@ -21,21 +27,17 @@
   <div class="row bg-primary">
     <!--First Column-->
     <div class="col-lg p-3">
-      
     </div>
     <!--Second Column-->
     <div class="col lg p-3">
       <h1 class="text-center text-white display-2">Total picks: {{ total_picks }}</h1>
-
       {% if total_picks!= 0 %}
         <h3 class="text-center text-white display-5">{{player_name}} is in the following teams:</h3>
         {{ picks_table | safe }}
       {% endif %}
-
     </div>
     <!--Third Column-->
     <div class="col lg p-3">
-      
     </div>
   </div>
 
