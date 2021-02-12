@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner
+from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner, generate_picks_table, name_to_picks
 from graph_manager import team_points_df, top_n_league_graph, team_points_bar_graph, team_points_line_graph, role_pie_chart, mvp_radar_graph, team_roster_radar_graph
 
 import gspread
@@ -79,10 +79,17 @@ def players():
 
 @app.route("/players/<name>")
 def player_stats(name):
-    # Remove dash in player name for disp;ay purposes
+    # Remove dash in player name for display purposes
     player_name = name.replace('-', ' ')
 
-    return render_template("player-stats.html", player_name=player_name)
+    # Get the TeamList sheet as a dataframe
+    team_list = get_sheet_df('TeamList')
+
+    # Generate the picks table and get the total picks
+    picks_table = generate_picks_table(player_name, team_list)
+    total_picks = name_to_picks(player_name, team_list)[1]
+
+    return render_template("player-stats.html", player_name=player_name, total_picks=total_picks, picks_table=picks_table)
 
 
 @app.before_first_request

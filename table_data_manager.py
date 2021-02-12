@@ -111,7 +111,8 @@ def team_to_owner(team_name, team_list_df):
         raise Exception(f"Couldn't find {team_name} in the list of team names")
 
 def name_to_picks(player_name, team_list_df):
-    """Returns a list of tuples, each of the form (team_name, team_owner), where each tuple corresponds to a team that picked the given player
+    """Returns a tuple. The first element is a list of tuples, each of the form (team_name, team_owner), where each tuple corresponds to a team that picked the given player.
+    The second element is the total number of picks that the player has
     
     :param player_name The player to get the picks of
     :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
@@ -130,7 +131,7 @@ def name_to_picks(player_name, team_list_df):
         if player_name in roster:
             picks.append((row['Team Name'], row['Team Owner']))
             
-    return picks
+    return picks, len(picks)
 
     
 
@@ -227,6 +228,25 @@ def generate_team_roster_table(team_name, team_list_df):
         raise Exception(f"Couldn't find '{team_name}' on the TeamList")
 
 
+###-------------------------------------------------------------
+# Tables for Player-stats page
+###-------------------------------------------------------------
+def generate_picks_table(player_name, team_list_df):
+    """Returns a table containing which teams picked the given player
+    
+    :param team_name The player name to generate the picks table of
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
+
+    # Get the teams that picked the given player
+    picks = name_to_picks(player_name, team_list_df)[0]
+    
+    # Create the dataframe
+    df = pd.DataFrame(picks, columns=['Team Name', 'Team Owner'])
+
+    # Generate the table from the dataframe
+    return generate_table(df)
+
+
 if __name__ == "__main__":
     team_list = get_sheet_df("TeamList")
-    print(name_to_picks('Nathan Sharpe', team_list))
+    print(generate_picks_table('Nathan Sharpe', team_list))

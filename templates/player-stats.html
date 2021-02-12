@@ -2,4 +2,7 @@
 {% block content %}
 <h1 class="text-center text-white display-2">{{ player_name }}</h1>
 <h5 class="text-center text-white display-5">Player Stats</h5>
+
+{{total_picks | safe}}
+{{picks_table | safe}}
 {% endblock %}
