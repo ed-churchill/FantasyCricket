@@ -37,6 +37,8 @@ def count_trailing_zeros(ls):
     for x in ls[::-1]:
         if x == 0:
             count += 1
+        else:
+          break
     return count
 
 
@@ -309,7 +311,8 @@ def player_points_line_graph(player_name, player_points_df):
     # REMOVE TRAILING ZEROS
 
     # Convert to cumulative data
-    cumulative_points = cumulative(total_points)
+    min_zeros = count_trailing_zeros(total_points)
+    cumulative_points = cumulative(total_points)[:-min_zeros]
 
     # Generate the graph
     graph = pygal.Line(style=style, show_legend=False)
