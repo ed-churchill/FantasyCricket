@@ -91,7 +91,7 @@ def mvp_radar_graph(total_stats_df):
     # Generate the radar chart
     mvp_name = mvp_stats[0]
     radar_chart = pygal.Radar(style=style, show_legend=False)
-    radar_chart.title = f"MVP {mvp_name}'s' points by category."
+    radar_chart.title = f"MVP {mvp_name}'s points by category."
     radar_chart.x_labels = ['Batting Points', 'Bowling Points', 'Fielding Points', 'Bonus Points']
     radar_chart.add(mvp_name, mvp_stats[2:6])
 

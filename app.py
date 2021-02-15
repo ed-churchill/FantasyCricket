@@ -20,14 +20,15 @@ def home():
     total_stats_df = get_sheet_df('TotalStats')
     
     # Generate tables
-    table = generate_table(table_df, link_columns=[("Team Name", "teams"), ("Team Owner", "players")])
+    league_table = generate_table(table_df, link_columns=[("Team Name", "teams"), ("Team Owner", "players")])
+    dream_team = generate_dream_team_table()
     
     # Generate graphs
-    graph = top_n_league_graph(5, table_df)
+    tracker_graph = top_n_league_graph(5, table_df)
     pie_chart = role_pie_chart(total_stats_df)
     radar_graph = mvp_radar_graph(total_stats_df)
 
-    return render_template("index.html", league_table=table, league_graph=graph, role_pie_chart=pie_chart, mvp_radar_graph=radar_graph)
+    return render_template("index.html", league_table=league_table, dream_team=dream_team, tracker_graph=tracker_graph, role_pie_chart=pie_chart, mvp_radar_graph=radar_graph)
 
 
 @app.route("/about")

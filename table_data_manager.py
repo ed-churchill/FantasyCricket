@@ -185,6 +185,7 @@ def generate_dream_team_table():
 
     # Get the dream team
     dream_team = pd.concat([batsmen.head(4), all_rounders.head(3), wicket_keepers.head(1), bowlers.head(3)])
+    dream_team.columns = ['ROLE', 'NAME', 'TOTAL POINTS']
 
     return generate_table(dream_team)
 
