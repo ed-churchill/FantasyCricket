@@ -37,8 +37,8 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/dream-team")
-def dream_team():
+@app.route("/dream-teams")
+def dream_teams():
     
     # Generate current dream team table
     total_stats = get_sheet_df("TotalStats")
@@ -64,7 +64,7 @@ def dream_team():
     for week_name in week_names:
         weekly_teams.append(generate_dream_team_table(get_sheet_df(week_name)))
 
-    return render_template("dream-team.html", current_team=current_team, week_nums=week_nums, weekly_teams=weekly_teams)
+    return render_template("dream-teams.html", current_team=current_team, week_nums=week_nums, weekly_teams=weekly_teams)
 
 
 @app.route("/teams")
