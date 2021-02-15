@@ -90,7 +90,7 @@ def mvp_radar_graph(total_stats_df):
     
     # Generate the radar chart
     mvp_name = mvp_stats[0]
-    radar_chart = pygal.Radar(style=style)
+    radar_chart = pygal.Radar(style=style, show_legend=False)
     radar_chart.title = f"MVP {mvp_name}'s' points by category."
     radar_chart.x_labels = ['Batting Points', 'Bowling Points', 'Fielding Points', 'Bonus Points']
     radar_chart.add(mvp_name, mvp_stats[2:6])
@@ -308,9 +308,7 @@ def player_points_line_graph(player_name, player_points_df):
         week_points = sum(list(player_points_df.iloc[i]))
         total_points.append(week_points)
 
-    # REMOVE TRAILING ZEROS
-
-    # Convert to cumulative data
+    # Convert to cumulative data and remove trailing zeros
     min_zeros = count_trailing_zeros(total_points)
     cumulative_points = cumulative(total_points)[:-min_zeros]
 
@@ -322,12 +320,37 @@ def player_points_line_graph(player_name, player_points_df):
     graph_data = graph.render_data_uri()
     return graph_data
 
+def player_points_radar_graph(player_name, player_points_df):
+    """Returns a radar graph giving the breakdown of the given player's points by category
+
+    :param player_name The player to generate the graph of
+    :param player_points_df The dataframe containing the necessary data (in this case we will obtain in from the player_points_df() function"""
+
+    # Calculate the total points in each category and store them in a list (which will be of length 4)
+    total_points = []
+    for i in range(0, 4):
+        category_points = sum(list(player_points_df.iloc[:, i]))
+        total_points.append(category_points)
+    
+    # Generate the radar graph
+    graph = pygal.Radar(style=style, show_legend=False)
+    graph.title = f"{player_name} Points By Category"
+    graph.x_labels = ['Batting', 'Bowling', 'Fielding', 'Bonus']
+    graph.add(player_name, total_points)
+    graph_data = graph.render_data_uri()
+    return graph_data
+
+
+
+
+
+
 if __name__ == "__main__":
     weekly_dfs = [get_sheet_df('Week1'), get_sheet_df('Week2'), get_sheet_df('Week3'), get_sheet_df('Week4'),
                 get_sheet_df('Week5'), get_sheet_df('Week6'), get_sheet_df('Week7'), get_sheet_df('Week8'), get_sheet_df('Week9'),
                 get_sheet_df('Week10'), get_sheet_df('TotalStats')]
-    player_points = player_points_df("Nathan Sharpe", weekly_dfs)
-    player_points_line_graph("Nathan Sharpe", player_points)
+    player_points = player_points_df("Sohayl Ujoodia", weekly_dfs)
+    print(player_points)
 
 
 

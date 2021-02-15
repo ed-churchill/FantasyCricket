@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner, generate_picks_table, name_to_picks
-from graph_manager import team_points_df, top_n_league_graph, team_points_bar_graph, team_points_line_graph, role_pie_chart, mvp_radar_graph, team_roster_radar_graph, player_points_df, player_points_bar_graph, player_points_line_graph
+from graph_manager import team_points_df, top_n_league_graph, team_points_bar_graph, team_points_line_graph, role_pie_chart, mvp_radar_graph, team_roster_radar_graph, player_points_df, player_points_bar_graph, player_points_line_graph, player_points_radar_graph
 
 import gspread
 import pandas as pd
@@ -70,7 +70,9 @@ def team_stats(name):
     radar_graph = team_roster_radar_graph(team_name, team_list, total_stats)
 
 
-    return render_template("team-stats.html", team_name=team_name, team_owner=team_owner, team_roster=team_roster, bar_graph=bar_graph, line_graph=line_graph, radar_graph=radar_graph)
+    return render_template("team-stats.html", team_name=team_name, team_owner=team_owner, 
+                            team_roster=team_roster, bar_graph=bar_graph, 
+                            line_graph=line_graph, radar_graph=radar_graph)
 
 
 @app.route("/players")
@@ -99,11 +101,16 @@ def player_stats(name):
     # Generate the player points cumulative line graph
     line_graph = player_points_line_graph(player_name, player_points)
 
+    # Generate the player points radar graph
+    radar_graph = player_points_radar_graph(player_name, player_points)
+
     # Generate the picks table and get the total picks
     picks_table = generate_picks_table(player_name, team_list)
     total_picks = name_to_picks(player_name, team_list)[1]
 
-    return render_template("player-stats.html", player_name=player_name, bar_graph=bar_graph, line_graph=line_graph, total_picks=total_picks, picks_table=picks_table)
+    return render_template("player-stats.html", player_name=player_name, 
+                            bar_graph=bar_graph, line_graph=line_graph,
+                            total_picks=total_picks, radar_graph=radar_graph, picks_table=picks_table)
 
 
 @app.before_first_request
