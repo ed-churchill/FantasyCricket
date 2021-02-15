@@ -165,8 +165,12 @@ def generate_dream_team_table(df):
     
     :param df The dataframe to calculate this particular dream team. e.g. df = get_sheet_df('TotalStats') or df = get_sheet_df('Week1')"""
 
-    # Get TotalStats sheet as a dataframe
+    # Copy dataframe
     stats = df.copy()
+    
+    # Return an empty string if the Week's points column is all zeros (i.e either no points were scored or the week hasn't happened yet)
+    if sum(list(stats['TOTAL'])) == 0:
+        return ""
 
     # Discard unecessary columns so we're left with Player Name, Player Role and TOTAL
     stats.drop(['Player Number', 'GAMES', 'RUNS', '4s', '6s', '50s', '100s', '150s', '200s', 'DUCKS', 'OVERS',
@@ -187,7 +191,7 @@ def generate_dream_team_table(df):
 
     # Get the dream team
     dream_team = pd.concat([batsmen.head(4), all_rounders.head(3), wicket_keepers.head(1), bowlers.head(3)])
-    dream_team.columns = ['ROLE', 'NAME', 'POINTS']
+    dream_team.columns = ['NAME', 'ROLE', 'POINTS']
 
     return generate_table(dream_team)
 
@@ -251,5 +255,4 @@ def generate_picks_table(player_name, team_list_df):
         return ""
 
 if __name__ == "__main__":
-    team_list = get_sheet_df("TeamList")
-    print(generate_picks_table('Nathan Sharpe', team_list))
+    pass

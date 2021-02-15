@@ -33,12 +33,38 @@ def home():
 
 @app.route("/about")
 def about():
+    
     return render_template("about.html")
 
 
 @app.route("/dream-team")
 def dream_team():
-    return render_template("dream-team.html")
+    
+    # Generate current dream team table
+    total_stats = get_sheet_df("TotalStats")
+    current_team = generate_dream_team_table(total_stats)
+
+    # Get a list of the weeks that we will generate the dream team tables for
+    week_names = []
+    week_nums = []
+    for i in range(0, 10):
+        # Get sheet for the week
+        sheet_name = f'Week{i+1}'
+        week_df = get_sheet_df(sheet_name)
+
+        # Check degeneracy
+        if generate_dream_team_table(week_df) == "":
+            continue
+        else:
+            week_names.append(f"Week{i+1}")
+            week_nums.append(i+1)
+    
+    # Generate tables and store in a list
+    weekly_teams = []
+    for week_name in week_names:
+        weekly_teams.append(generate_dream_team_table(get_sheet_df(week_name)))
+
+    return render_template("dream-team.html", current_team=current_team, week_nums=week_nums, weekly_teams=weekly_teams)
 
 
 @app.route("/teams")
