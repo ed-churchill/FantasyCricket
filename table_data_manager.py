@@ -160,22 +160,24 @@ def generate_league_table_df():
 # Tables for Dream Team page
 ###-------------------------------------------------------------
 
-def generate_dream_team_table():
-    """Generates a html table fo the current Fantasy Cricket Dream Team"""
+def generate_dream_team_table(df):
+    """Generates a html table fo the Fantasy Cricket Dream Team for the given week (or the given TotalStats
+    
+    :param df The dataframe to calculate this particular dream team. e.g. df = get_sheet_df('TotalStats') or df = get_sheet_df('Week1')"""
 
     # Get TotalStats sheet as a dataframe
-    total_stats = get_sheet_df("TotalStats")
+    stats = df.copy()
 
     # Discard unecessary columns so we're left with Player Name, Player Role and TOTAL
-    total_stats.drop(['Player Number', 'GAMES', 'RUNS', '4s', '6s', '50s', '100s', '150s', '200s', 'DUCKS', 'OVERS',
+    stats.drop(['Player Number', 'GAMES', 'RUNS', '4s', '6s', '50s', '100s', '150s', '200s', 'DUCKS', 'OVERS',
                         'BALLS', 'WICKETS', 'RUNS AGAINST', 'MAIDENS', '3fers/4fers', '5fers', '6+fers',
                         'CATCHES', 'RUN-OUTS', 'STUMPINGS', 'MOTM', 'WINS', 'BATTING', 'BOWLING', 'FIELDING', 'BONUS'], axis=1, inplace=True)
 
     # Split dataframe into 4 different dataframes, one for each role
-    all_rounders = total_stats[total_stats['Player Role'] == 'All-Rounder']
-    batsmen = total_stats[total_stats['Player Role'] == 'Batsman']
-    bowlers = total_stats[total_stats['Player Role'] == 'Bowler']
-    wicket_keepers = total_stats[total_stats['Player Role'] == 'Wicket-keeper']
+    all_rounders = stats[stats['Player Role'] == 'All-Rounder']
+    batsmen = stats[stats['Player Role'] == 'Batsman']
+    bowlers = stats[stats['Player Role'] == 'Bowler']
+    wicket_keepers = stats[stats['Player Role'] == 'Wicket-keeper']
 
     # Sort the dataframe for each role in desceding order of total points
     all_rounders = all_rounders.sort_values(by=['TOTAL'], ascending=False)
@@ -185,7 +187,7 @@ def generate_dream_team_table():
 
     # Get the dream team
     dream_team = pd.concat([batsmen.head(4), all_rounders.head(3), wicket_keepers.head(1), bowlers.head(3)])
-    dream_team.columns = ['ROLE', 'NAME', 'TOTAL POINTS']
+    dream_team.columns = ['ROLE', 'NAME', 'POINTS']
 
     return generate_table(dream_team)
 

@@ -21,7 +21,7 @@ def home():
     
     # Generate tables
     league_table = generate_table(table_df, link_columns=[("Team Name", "teams"), ("Team Owner", "players")])
-    dream_team = generate_dream_team_table()
+    dream_team = generate_dream_team_table(total_stats_df)
     
     # Generate graphs
     tracker_graph = top_n_league_graph(5, table_df)
@@ -38,8 +38,7 @@ def about():
 
 @app.route("/dream-team")
 def dream_team():
-    dream_team = generate_dream_team_table()
-    return render_template("dream-team.html", dream_team=dream_team)
+    return render_template("dream-team.html")
 
 
 @app.route("/teams")
