@@ -1,38 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container-fluid">
-    <div class="text-center">
-        <h1>Welcome to UWMCC BUCS Fantasy Cricket!</h1>
-        <p>This website contains all the information you need to keep up to date with the UWMCC BUCS Fantasy Cricket
-            League.</p>
-        <h3>How Fantasy Cricket works</h3>
+
+<h3 class="text-center text-white display-3">About Warwick Fantasy Cricket</h3>
+
+<!--How Fantasy Cricket Works row-->
+<h4 class="text-center text-white display-4 p-4">How Fantasy Cricket Works</h4>
+<div class="row bg-primary p-3">
+    <!--Left Column-->
+    <div class="col-lg p-3">
+        <h5 class="text-center text-white display-5">Step 1: Allocation</h5>
+        <ul class="text-white">
+            <li class="p-2">Each UWMCC player is assigned a <b>PRICE</b></li>
+            <li class="p-2">Each UWMCC is assigned a <b>ROLE</b> (Batsman, Bowler, All-Rounder or Wicket-Keeper</li>
+            <li class="p-2">Each UWMCC player is assigned a <b>SQUAD</b> (1s/2s, 3s/4s, or Development)</li>
+        </ul>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 bg-primary">
-                <div class="text-center">
-                    <h2><u>1. Team Selection</u><br></h2>
-                </div>
-                <ul>
-                    <li>Each UWMCC player is asssigned a <b>role</b> (batsmen, bowler, keeper or all-rounder),
-                        a <b>squad</b> (1s/2s, 3s/4s or Dev), and a <b>price</b></li>
-                    <li>Participants can select their Fantasy XI, subject to the following constraints:
-                        <ul>
-                            <li>constraint 1</li>
-                        </ul>
-                    </li>
-                    <li>1</li>
-                    <li>1</li>
-                    <li>1</li>
-                </ul>
-            </div>
-            <div class="col-md-4 bg-secondary">
-                TWO
-            </div>
-            <div class="col-md-4 bg-danger">
-                THREE
-            </div>
-        </div>
+    <!--Middle Column-->
+    <div class="col-lg p-3">
+        <h5 class="text-center text-white display-5">Step 2: Team Selection</h5>
+        <p class="text-center text-white p-1">Entrants select their Fantasy XI. Each team <b>MUST</b>:</p>
+        <ul class="text-white">
+            <li>Cost <b>no more</b> than £100m</li>
+            <li>Contain <b>exactly 4 batsmen</b> (keepers can also be played as batsmen)</li>
+            <li>Contain <b>exactly 3 bowlers</b></li>
+            <li>Contain <b>exactly 3 all-rounders</b></li>
+            <li>Contain <b>at least 1 wicket-keeper</b> (one of which is the designated keeper, the others are played as batsmen)</li>
+            <li>Contain <b>no more than 6</b> players from the same squad</li>
+        </ul>
     </div>
-</div>
+     <!--Right Column-->
+     <div class="col-lg p-3">
+        <h5 class="text-center text-white display-5">Step 3: Play!</h5>
+        <ul class="text-white">
+            <li class="p-2">BUCS matches are played each week</li>
+            <li class="p-2">Individual players score <b>points</b>, contributing towards their team's overall points total (see below for how points are calculated)</li>
+            <li class="p-2">Track the <b>League Table</b> and all the <b>stats</b> you need on this website!</li>
+        </ul>
+    </div>
+  </div>
+
+
 {% endblock %}
