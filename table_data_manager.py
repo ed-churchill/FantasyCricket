@@ -157,6 +157,44 @@ def generate_league_table_df():
 
 
 ###-------------------------------------------------------------
+# Tables for About page
+###-------------------------------------------------------------
+
+def generate_points_calculator_table():
+    """Generates a table showing how the points are calculated for Fantasy Cricket"""
+
+    # Points for [runs, 4s, 6s, 50s, 100s, 150s, 200s, Ducks]
+    batting_points = [2.5, 2, 4, 30, 60, 90, 120, -15]
+
+    # Points for [wickets, 3fer, 5fer, 6+fer, economy, maiden]
+    bowling_points = [20, 30, 60, '60 + 15*(num. wickets above 5)', 'balls bowled - 1.5*(runs against)', 10]
+
+    # Points for [catch, run-out, stumping]
+    fielding_points = [15, 15, 15]
+
+    # Points for [match win, MOTM]
+    bonus_points = [10, 25]
+
+    # Merge lists
+    points = batting_points + bowling_points + fielding_points + bonus_points
+    print(points)
+
+    # Row names
+    row_names = ['Run', '4', '6', '50', '100', '150', '200', 'Duck',
+                    'Wicket', '3fer', '5fer', '6+fer', 'Economy', 'Maiden',
+                    'Catch', 'Run-out', 'Stumping',
+                    'Match Win', 'MOTM']
+
+    # Generate dataframe
+    points_df = pd.DataFrame(data=[row_names, points])
+    points_df = points_df.T
+    points_df.columns = ['Action', 'Points']
+
+    # Generate table from dataframe
+    return generate_table(points_df)
+
+
+###-------------------------------------------------------------
 # Tables for Dream Team page
 ###-------------------------------------------------------------
 
@@ -255,4 +293,4 @@ def generate_picks_table(player_name, team_list_df):
         return ""
 
 if __name__ == "__main__":
-    pass
+    generate_points_calculator_table()
