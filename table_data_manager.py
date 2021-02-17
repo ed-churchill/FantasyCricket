@@ -167,7 +167,7 @@ def generate_points_calculator_table():
     batting_points = [2.5, 2, 4, 30, 60, 90, 120, -15]
 
     # Points for [wickets, 3fer, 5fer, 6+fer, economy, maiden]
-    bowling_points = [20, 30, 60, '60 + 15*(num. wickets above 5)', 'balls bowled - 1.5*(runs against)', 10]
+    bowling_points = [20, 30, 60, '60 + 15*(num. wickets above 5)', 'balls bowled - 0.5*(runs against)', 10]
 
     # Points for [catch, run-out, stumping]
     fielding_points = [15, 15, 15]
