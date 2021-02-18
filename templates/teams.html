@@ -1,3 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
+
+<h3 class="text-center text-white display-3">Teams</h3>
+
+<!--List of teams-->
+<div class="row bg-primary p-3">
+    {{teams_table | safe }}
+</div>
+
 {% endblock %}

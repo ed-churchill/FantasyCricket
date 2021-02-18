@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner, generate_picks_table, name_to_picks, generate_points_calculator_table
+from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner, generate_picks_table, name_to_picks, generate_points_calculator_table, generate_teams_table
 from graph_manager import team_points_df, top_n_league_graph, team_points_bar_graph, team_points_line_graph, role_pie_chart, mvp_radar_graph, team_roster_radar_graph, player_points_df, player_points_bar_graph, player_points_line_graph, player_points_radar_graph
 
 import gspread
@@ -72,7 +72,14 @@ def dream_teams():
 
 @app.route("/teams")
 def teams():
-    return render_template("teams.html")
+    
+    # Get TeamList dataframe
+    team_list = get_sheet_df('TeamList')
+
+    # Generate table of all the teams
+    teams_table = generate_teams_table(team_list)
+    
+    return render_template("teams.html", teams_table=teams_table)
 
 @app.route("/teams/<name>")
 def team_stats(name):

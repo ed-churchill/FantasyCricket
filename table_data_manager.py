@@ -235,6 +235,24 @@ def generate_dream_team_table(df):
 
 
 ###-------------------------------------------------------------
+# Tables for Teams page
+###-------------------------------------------------------------
+
+def generate_teams_table(team_list_df):
+    """Generates a html table of all the teams in alphabetical order
+    
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
+
+    # Get team names and team owners
+    teams = team_list_df[['Team Name', 'Team Owner']]
+
+    # Put teams in alphabetical order
+    alphabetical_teams = teams.sort_values('Team Name')
+
+    # Generate table
+    return generate_table(alphabetical_teams)
+
+###-------------------------------------------------------------
 # Tables for Team-stats page
 ###-------------------------------------------------------------
 
@@ -274,6 +292,11 @@ def generate_team_roster_table(team_name, team_list_df):
 
 
 ###-------------------------------------------------------------
+# Tables for Players page
+###-------------------------------------------------------------
+
+
+###-------------------------------------------------------------
 # Tables for Player-stats page
 ###-------------------------------------------------------------
 def generate_picks_table(player_name, team_list_df):
@@ -293,4 +316,5 @@ def generate_picks_table(player_name, team_list_df):
         return ""
 
 if __name__ == "__main__":
-    generate_points_calculator_table()
+    team_list = get_sheet_df("TeamList")
+    generate_teams_table(team_list)
