@@ -1,4 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
+<h3 class="text-center text-white display-3">Players</h3>
+
+<!--List of Players-->
+<div class="row bg-primary p-5">
+    {{players_table | safe }}
+</div>
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner, generate_picks_table, name_to_picks, generate_points_calculator_table, generate_teams_table
+from table_data_manager import generate_table_sheet, generate_league_table_df, generate_team_roster_table, generate_dream_team_table, get_sheet_df, generate_table, team_to_owner, generate_picks_table, name_to_picks, generate_points_calculator_table, generate_teams_table, generate_players_table
 from graph_manager import team_points_df, top_n_league_graph, team_points_bar_graph, team_points_line_graph, role_pie_chart, mvp_radar_graph, team_roster_radar_graph, player_points_df, player_points_bar_graph, player_points_line_graph, player_points_radar_graph
 
 import gspread
@@ -113,7 +113,14 @@ def team_stats(name):
 
 @app.route("/players")
 def players():
-    return render_template("players.html")
+
+    # Get PlayerList Sheet
+    player_list = get_sheet_df('PlayerList')
+
+    # Generate player list table
+    players_table = generate_players_table(player_list)
+
+    return render_template("players.html", players_table=players_table)
 
 @app.route("/players/<name>")
 def player_stats(name):
@@ -151,8 +158,6 @@ def player_stats(name):
 
 @app.before_first_request
 def initialize():
-    # # Define the scope of the application
-    # Store sheets in dictionary
 
     # check if the data folder is empty
     if not os.listdir("data"):
@@ -169,7 +174,7 @@ def initialize():
         # Authorise the client sheet
         client = gspread.authorize(creds)
 
-        # Get the spreadsheet
+        # Get the stats spreadsheets
         sheet = client.open("FantasyCricketPlayerStats")
 
         for i, sheet_name in enumerate(sheet_names):
@@ -181,6 +186,19 @@ def initialize():
             df = df[1:]
             df.to_csv(os.path.join('data', f'{sheet_name}.csv'), index=False)
         
+        # Get the FantasyCricketTeamSelection spreadsheet
+        team_selection_sheet = client.open('FantasyCricketTeamSelection')
+        player_list = team_selection_sheet.get_worksheet(0)
+
+        # Trim the FantasyCricketTeamSelection spreadsheet
+        sheet_range = 'B2:E200'
+        records_data = player_list.get(sheet_range)
+
+        # Convert sheet to csv
+        df = pd.DataFrame.from_dict(records_data)
+        df.columns = ['Player Name', 'Squad', 'Role', 'Price (M)']
+        df.to_csv(os.path.join('data', 'PlayerList.csv'), index=False)
+
         print("Sheet downloading completed")
 
 

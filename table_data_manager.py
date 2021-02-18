@@ -298,6 +298,17 @@ def generate_team_roster_table(team_name, team_list_df):
 # Tables for Players page
 ###-------------------------------------------------------------
 
+def generate_players_table(player_list_df):
+    """Generates a html table of all the players in alphabetical order, along with their roles, squad and price
+    
+    :param team_selector_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('PlayerList')"""
+
+    # Sort players alphabetically
+    ordered_players = player_list_df.sort_values('Player Name')
+
+    # Return the table
+    return generate_table(ordered_players)
+
 
 ###-------------------------------------------------------------
 # Tables for Player-stats page
@@ -319,5 +330,5 @@ def generate_picks_table(player_name, team_list_df):
         return ""
 
 if __name__ == "__main__":
-    team_list = get_sheet_df("TeamList")
-    generate_teams_table(team_list)
+    player_list = get_sheet_df("PlayerList")
+    generate_players_table(player_list)
