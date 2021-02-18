@@ -147,12 +147,15 @@ def generate_league_table_df():
     team_list = get_sheet_df("TeamList")
     
     # Trim the data to get Team name, team owner, and team total points
-    team_list.drop(['Batsman 1', 'Batsman 2', 'Batsman 3', 'Batsman 4', 'All-Rounder 1', 'All-Rounder 2', 'All-Rounder 3',
-                    'Wicket-keeper', 'Bowler 1', 'Bowler 2' , 'Bowler 3', 'Week 1 Points', 'Week 2 Points', 'Week 3 Points', 
-                    'Week 4 Points', 'Week 5 Points', 'Week 6 Points', 'Week 7 Points', 'Week 8 Points', 'Week 9 Points', 'Week 10 Points'], axis=1, inplace=True)
+    team_list = team_list[['Team Name', 'Team Owner', 'Total Points']]
     
     # Sort table in descending order of points
     league_table = team_list.sort_values(by=['Total Points'], ascending=False)
+
+    # Add league positions
+    league_positions = range(1, len(league_table.index) + 1)
+    league_table.insert(0, "Position", league_positions) 
+
     return league_table
 
 
