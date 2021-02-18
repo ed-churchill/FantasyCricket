@@ -20,7 +20,7 @@ def home():
     total_stats_df = get_sheet_df('TotalStats')
     
     # Generate tables
-    league_table = generate_table(table_df, link_columns=[("Team Name", "teams"), ("Team Owner", "players")])
+    league_table = generate_table(table_df, link_columns=[("Team Name", "teams")])
     dream_team = generate_dream_team_table(total_stats_df)
     
     # Generate graphs

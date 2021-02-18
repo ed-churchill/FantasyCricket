@@ -234,7 +234,7 @@ def generate_dream_team_table(df):
     dream_team = pd.concat([batsmen.head(4), all_rounders.head(3), wicket_keepers.head(1), bowlers.head(3)])
     dream_team.columns = ['NAME', 'ROLE', 'POINTS']
 
-    return generate_table(dream_team)
+    return generate_table(dream_team, link_columns=[('NAME', 'players')])
 
 
 ###-------------------------------------------------------------
@@ -253,7 +253,7 @@ def generate_teams_table(team_list_df):
     alphabetical_teams = teams.sort_values('Team Name')
 
     # Generate table
-    return generate_table(alphabetical_teams)
+    return generate_table(alphabetical_teams, link_columns=[('Team Name', 'teams')])
 
 ###-------------------------------------------------------------
 # Tables for Team-stats page
@@ -307,7 +307,7 @@ def generate_players_table(player_list_df):
     ordered_players = player_list_df.sort_values('Player Name')
 
     # Return the table
-    return generate_table(ordered_players)
+    return generate_table(ordered_players, link_columns=[('Player Name', 'players')])
 
 
 ###-------------------------------------------------------------
