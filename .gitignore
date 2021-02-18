@@ -3,5 +3,4 @@ google-credentials.json
 venv/
 .ipynb_checkpoints/
 __pycache__/
-data/*
 bootstrap-5.0.0-beta1
