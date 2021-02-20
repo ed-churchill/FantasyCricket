@@ -289,7 +289,7 @@ def generate_team_roster_table(team_name, team_list_df):
         team_roster[0] = team_roster.index.values
         team_roster[1] = player_names
         team_roster.columns = ["Role", "Player Name"]
-        return generate_table(team_roster)
+        return generate_table(team_roster, link_columns=[("Player Name", "players")])
     else:
         raise Exception(f"Couldn't find '{team_name}' on the TeamList")
 
