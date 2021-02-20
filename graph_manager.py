@@ -5,6 +5,7 @@ import pandas as pd
 
 # DarkStyle class which will be used for all graphs
 style = DarkStyle
+weeks = [f"Week{x}" for x in range(1, 11)]
 
 ###-------------------------------------------------------------
 # Utility functions
@@ -121,7 +122,7 @@ def top_n_league_graph(n, league_df):
     graph = pygal.Line(style=style, margin=35)
     graph.title = f"Current Top {n} Tracker"
     graph.y_title = "Total Points"
-    graph.x_labels = [f"Week {x}" for x in range(1, 11)]
+    graph.x_labels = weeks
     
     # Add the data to the graph
     for team, values in zip(top_n, data):
@@ -134,25 +135,6 @@ def top_n_league_graph(n, league_df):
 ###-------------------------------------------------------------
 # Graph data for Team-Stats page
 ###-------------------------------------------------------------
-def team_points_bar_graph(team_name, team_list_df):
-    """Returns a bar graph giving the weekly breakdown of points for a specific team
-    
-    :param team_name The team name to generate the graph of
-    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
-    
-    # Get the dataframe containing the graph data
-    team_points = team_points_df(team_name, team_list_df)
-
-    # Style the graph
-    graph = pygal.Bar(style=style, show_legend=False)
-    graph.title = f"{team_name} Weekly Points"
-    graph.x_labels = [f"Week {x}" for x in range(1, 11)]
-
-    # Add the data and render the graph
-    graph.add("Points", team_points.iloc[0])
-    graph_data = graph.render_data_uri()
-    return graph_data
-
 def team_points_df(team_name, team_list_df):
     """Returns a dataframe giving a weekly breakdown of a team's total points
     
@@ -179,62 +161,80 @@ def team_points_df(team_name, team_list_df):
     else:
         raise Exception(f"Couldn't find '{team_name}' on the TeamList")
 
-def team_points_stacked_bar_graph(team_name, team_list_df):
-    """Returns a stacked bar graph giving the weekly breakdown of points for a specific team broken down by player
+def team_players_breakdown_df(team_name, team_list_df):
+    """Returns a dataframe giving the weekly breakdown of points for a specific team by player
     
-    :param team_name The team name to generate the graph of
+    :param team_name The team name to get the dataframe of
     :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
 
+    # Get list of roles
     roles = ['Batsman 1', 'Batsman 2', 'Batsman 3', 'Batsman 4', 'All-Rounder 1','All-Rounder 2', 'All-Rounder 3', 
                     'Wicket-keeper', 'Bowler 1', 'Bowler 2', 'Bowler 3']
 
+    # Get team points breakdown by week
     team_names = list(team_list_df['Team Name'])
     row_index = team_names.index(team_name)
     team_points_breakdown = team_list_df.iloc[[row_index]]
 
+    # Get player names in the team
     player_numbers = [int(team_points_breakdown[role]) for role in roles]
     player_names = numbers_to_names(player_numbers)
 
-    df = pd.DataFrame(zip(roles, player_numbers, player_names), columns =["Role" , "ID", "Name"])
+    # Generate dataframe
+    df = pd.DataFrame(zip(roles, player_names), columns =["Role" , "Name"])
 
     weeks = [f"Week{i}" for i in range(1, 11)]
     for week in weeks:
       week_df = get_sheet_df(week)[["Player Number", "TOTAL"]]
       points = week_df.set_index('Player Number').loc[player_numbers].reset_index()
       df[week] = points["TOTAL"]
+    
+    return df
 
+def team_points_stacked_bar_graph(team_name, breakdown_df):
+    """Returns a stacked bar graph giving the weekly breakdown of points for a specific team
+    
+    :param team_name The team name to generate the graph of
+    :param breakdown_df The dataframe containing the data needed (in this case we will have breakdown_df = team_players_breakdown_df(team_name, team_list_df)"""
+
+    # Genereate graph
     graph = pygal.StackedBar(style=style)
     graph.title = f"{team_name} Weekly Points Breakdown"
     graph.x_labels = weeks
-
-    for _, row in df.iterrows():
+    for _, row in breakdown_df.iterrows():
       label = f"{row['Name']}"
       values = row[weeks]
-      values = [x if x != 0.0 else None for x in values]
-      
       graph.add(label, values)
     
     return graph.render_data_uri()
 
-def team_points_line_graph(team_name, team_list_df):
-    """Returns a line graph giving the cumulative weekly breakdown of points for a specific team
+def team_points_stacked_line_graph(team_name, breakdown_df):
+    """Returns a stacked line graph giving the cumulative weekly breakdown of points for a specific team
     
     :param team_name The team name to generate the graph of
-    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
+    :param breakdown_df The dataframe containing the data needed (in this case we will have breakdown_df = team_players_breakdown_df(team_name, team_list_df)"""
+
+    # Get cumulative data
+    zeros = []
+    data = []
+    for _, row in breakdown_df.iterrows():
+      label = f"{row['Name']}"
+      values = row[weeks]
+      zeros.append(count_trailing_zeros(values))
+      values = cumulative(values)
+      data.append((label, values))
     
-    # Get the weekly points in a list and remove trailing zeros
-    team_points = list(team_points_df(team_name, team_list_df).iloc[0])
-    trailing_zeros = count_trailing_zeros(team_points)
-    team_points = team_points[:-trailing_zeros]
+    # Number of weeks to trim
+    min_zeros = min(zeros)
 
-    # Convert to cumulative data
-    cumulative_points = cumulative(team_points)
-
-    # Generate the graph
-    graph = pygal.Line(style=style, show_legend=False)
+    # Generate graph
+    graph = pygal.StackedLine(style=style, fill=True)
     graph.title = f"{team_name} Points Tracker"
-    graph.x_labels = [f"Week {x}" for x in range(1, 11)]
-    graph.add("Points", cumulative_points)
+    graph.x_labels = weeks[:-min_zeros]
+    for label, values in data:
+      graph.add(label, values[:-min_zeros],  allow_interruptions=True)
+    
+    # Render graph
     graph_data = graph.render_data_uri()
     return graph_data
 
@@ -262,7 +262,6 @@ def team_roster_radar_graph(team_name, team_list_df, total_stats_df):
                         total_stats_df['BOWLING'][x-1], 
                         total_stats_df['FIELDING'][x-1],
                         total_stats_df['BONUS'][x-1]) for x in team_roster]
-    print(team_roster_points)
 
     # Generate the radar graph
     radar_graph = pygal.Radar(style=style)
@@ -321,7 +320,7 @@ def player_points_bar_graph(player_name, player_points_df):
     # Style graph
     bar_graph = pygal.Bar(style=style)
     bar_graph.title = f"{player_name} points breakdown"
-    bar_graph.x_labels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8', 'Week 9', 'Week 10']
+    bar_graph.x_labels = weeks
 
     # Add data
     bar_graph.add('Batting Points', player_points_df['Batting Points'])
@@ -334,26 +333,32 @@ def player_points_bar_graph(player_name, player_points_df):
     return graph_data
 
 def player_points_line_graph(player_name, player_points_df):
-    """Returns a line graph giving the cumulative weekly points of a given player
+    """Returns a stacked line graph giving the cumulative weekly points of a given player broken down by their role
 
     :param player_name The player to generate the graph of
     :param player_points_df The dataframe containing the necessary data (in this case we will obtain in from the player_points_df() function"""
 
-    # Calculate total points each week and store in a list
-    total_points = []
-    for i in range(0, 10):
-        week_points = sum(list(player_points_df.iloc[i]))
-        total_points.append(week_points)
+    # Get cumulative data
+    zeros = []
+    data = []
+    roles = player_points_df.columns
+    for role in roles:
+      values = player_points_df[role]
+      zeros.append(count_trailing_zeros(values))
+      values = cumulative(values)
+      data.append((role, values))
+    
+    # Number of weeks to trim
+    min_zeros = min(zeros)
 
-    # Convert to cumulative data and remove trailing zeros
-    min_zeros = count_trailing_zeros(total_points)
-    cumulative_points = cumulative(total_points)[:-min_zeros]
-
-    # Generate the graph
-    graph = pygal.Line(style=style, show_legend=False)
+    # Generate graph
+    graph = pygal.StackedLine(style=style, fill=True)
     graph.title = f"{player_name} Points Tracker"
-    graph.x_labels = [f"Week {x}" for x in range(1, 11)]
-    graph.add("Points", cumulative_points)
+    graph.x_labels = weeks[:-min_zeros]
+    for label, values in data:
+      graph.add(label, values[:-min_zeros],  allow_interruptions=True)
+    
+    # Render graph
     graph_data = graph.render_data_uri()
     return graph_data
 
@@ -385,7 +390,8 @@ def player_points_radar_graph(player_name, player_points_df):
 if __name__ == "__main__":
   team_name = "The Stoin CC"
   team_list = get_sheet_df("TeamList")
-  team_points_stacked_bar_graph(team_name, team_list)
+  df = team_players_breakdown_df(team_name, team_list)
+  print(df)
 
 
 
