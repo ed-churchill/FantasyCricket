@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3 class="text-center text-white display-3">Welcome to UWMCC BUCS Fantasy Cricket!</h3>
+<h3 class="text-center text-white display-3"><b>Welcome to UWMCC BUCS Fantasy Cricket!</b></h3>
 <h5 class="text-center text-white display-5">(Scroll down for League Table)</h5>
   
 <!--First Row-->
@@ -22,7 +22,7 @@
 
 <!--Second Row-->
 <div class="row bg-primary p-5">
-  <h5 class="text-center text-white display-5">Current Dream Team (based on total points)</h5>
+  <h5 class="text-center text-white display-5"><b>Current Dream Team</b> <br> (based on total points)</h5>
   {{dream_team|safe}}
 </div>
 
@@ -35,7 +35,7 @@
 
 <!--Fourth Row-->
 <div class="row bg-primary p-5">
-  <h1 class="text-center text-white display-3">League Table</h1>
+  <h1 class="text-center text-white display-3"><b>League Table</b></h1>
   {{league_table | safe}}
 </div>
 
