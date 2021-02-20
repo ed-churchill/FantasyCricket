@@ -179,6 +179,45 @@ def team_points_df(team_name, team_list_df):
     else:
         raise Exception(f"Couldn't find '{team_name}' on the TeamList")
 
+def team_points_stacked_bar_graph(team_name, team_list_df):
+    """Returns a stacked bar graph giving the weekly breakdown of points for a specific team broken down by player
+    
+    :param team_name The team name to generate the graph of
+    :param team_list_df The dataframe containing the data needed (in this case we will have team_list_df = get_sheet_df('TeamList')"""
+
+    roles = ['Batsman 1', 'Batsman 2', 'Batsman 3', 'Batsman 4', 'All-Rounder 1','All-Rounder 2', 'All-Rounder 3', 
+                    'Wicket-keeper', 'Bowler 1', 'Bowler 2', 'Bowler 3']
+
+    team_names = list(team_list_df['Team Name'])
+    row_index = team_names.index(team_name)
+    team_points_breakdown = team_list_df.iloc[[row_index]]
+
+    print(f"breakdown for {team_name}")
+    player_numbers = [int(team_points_breakdown[role]) for role in roles]
+    player_names = numbers_to_names(player_numbers)
+
+    df = pd.DataFrame(zip(roles, player_numbers, player_names), columns =["Role" , "ID", "Name"])
+
+    weeks = [f"Week{i}" for i in range(1, 11)]
+    for week in weeks:
+      week_df = get_sheet_df(week)[["Player Number", "TOTAL"]]
+      points = week_df.set_index('Player Number').loc[player_numbers].reset_index()
+      df[week] = points["TOTAL"]
+
+    graph = pygal.StackedBar(style=style)
+    graph.title = 'Browser usage evolution (in %)'
+    graph.x_labels = weeks
+
+    for _, row in df.iterrows():
+      # label = f"{row['Role']} - {row['Name']}"
+      label = f"{row['Name']}"
+      values = row[weeks]
+      values = [x if x != 0.0 else None for x in values]
+      
+      graph.add(label, values)
+    
+    return graph.render_data_uri()
+
 def team_points_line_graph(team_name, team_list_df):
     """Returns a line graph giving the cumulative weekly breakdown of points for a specific team
     
@@ -346,11 +385,9 @@ def player_points_radar_graph(player_name, player_points_df):
 
 
 if __name__ == "__main__":
-    weekly_dfs = [get_sheet_df('Week1'), get_sheet_df('Week2'), get_sheet_df('Week3'), get_sheet_df('Week4'),
-                get_sheet_df('Week5'), get_sheet_df('Week6'), get_sheet_df('Week7'), get_sheet_df('Week8'), get_sheet_df('Week9'),
-                get_sheet_df('Week10'), get_sheet_df('TotalStats')]
-    player_points = player_points_df("Sohayl Ujoodia", weekly_dfs)
-    print(player_points)
+  team_name = "The Stoin CC"
+  team_list = get_sheet_df("TeamList")
+  team_points_stacked_bar_graph(team_name, team_list)
 
 
 
