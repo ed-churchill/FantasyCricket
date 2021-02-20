@@ -192,7 +192,6 @@ def team_points_stacked_bar_graph(team_name, team_list_df):
     row_index = team_names.index(team_name)
     team_points_breakdown = team_list_df.iloc[[row_index]]
 
-    print(f"breakdown for {team_name}")
     player_numbers = [int(team_points_breakdown[role]) for role in roles]
     player_names = numbers_to_names(player_numbers)
 
@@ -205,11 +204,10 @@ def team_points_stacked_bar_graph(team_name, team_list_df):
       df[week] = points["TOTAL"]
 
     graph = pygal.StackedBar(style=style)
-    graph.title = 'Browser usage evolution (in %)'
+    graph.title = f"{team_name} Weekly Points Breakdown"
     graph.x_labels = weeks
 
     for _, row in df.iterrows():
-      # label = f"{row['Role']} - {row['Name']}"
       label = f"{row['Name']}"
       values = row[weeks]
       values = [x if x != 0.0 else None for x in values]
