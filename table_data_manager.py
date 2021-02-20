@@ -325,7 +325,7 @@ def generate_picks_table(player_name, team_list_df):
     # Generate table if picks is non-empty
     if picks:
         df = pd.DataFrame(picks, columns=['Team Name', 'Team Owner'])
-        return generate_table(df)
+        return generate_table(df, [("Team Name", "teams")])
     else: 
         return ""
 
