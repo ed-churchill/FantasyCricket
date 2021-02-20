@@ -156,9 +156,7 @@ def player_stats(name):
                             total_picks=total_picks, radar_graph=radar_graph, picks_table=picks_table)
 
 
-@app.before_first_request
 def initialize():
-
     # check if the data folder is empty
     if not os.listdir("data"):
         print("Downloading sheets from google sheets")
@@ -205,4 +203,5 @@ def initialize():
 
 
 if __name__ == "__main__":
+    initialize()
     app.run(debug=True)
