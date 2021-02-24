@@ -99,11 +99,17 @@ def clean_fielding_df(oppo_batting_scorecard):
         df = df[df.A != 'not out']
         df = df[df.A != 'did not bat']
 
-        # Delete any rows where the mode of dismissal is bowled, or where we have an 'Unsure'
+        # Delete any rows where the mode of dismissal is bowled.
         for index in df.index:
             if df['A'][index] == 0 and df['B'][index][0] == 'b':
                 df.drop([index], inplace=True)
-            if 'unsure' in str(df['A'][index]).lower() or 'unsure' in str(df['B'][index]).lower():
+
+        # Delete any rows where the mode of dismissal is unsure
+        for index in df.index:
+            unsure_a = str(df['A'][index]).lower()
+            unsure_b = str(df['B'][index]).lower()
+            
+            if 'unsure' in unsure_a or 'unsure' in unsure_b:
                 df.drop([index], inplace=True)
 
         # Get stats on catches, run outs and stumpings and store them in list
