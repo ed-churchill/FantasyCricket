@@ -17,5 +17,5 @@ def update_sheets(scorecard_link, week_number):
     write_google_sheets.update_stats(bat_df, bowl_df, field_df, week_number)
     print(f"\nFinished updating the Week{week_number} sheet with data from {scorecard_link}\n")
 
-# if __name__ == "__main__":
-#   update_sheets('insert_scorecard_link', insert_week_number)
+if __name__ == "__main__":
+   update_sheets('https://uniofwarwick.play-cricket.com/website/results/4026201', 5)
