@@ -289,7 +289,7 @@ def generate_team_roster_table(team_name, team_list_df):
         team_roster[0] = team_roster.index.values
         team_roster[1] = player_names
         team_roster.columns = ["Role", "Player Name"]
-        return generate_table(team_roster)
+        return generate_table(team_roster, link_columns=[("Player Name", "players")])
     else:
         raise Exception(f"Couldn't find '{team_name}' on the TeamList")
 
@@ -325,7 +325,7 @@ def generate_picks_table(player_name, team_list_df):
     # Generate table if picks is non-empty
     if picks:
         df = pd.DataFrame(picks, columns=['Team Name', 'Team Owner'])
-        return generate_table(df)
+        return generate_table(df, [("Team Name", "teams")])
     else: 
         return ""
 

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="text-center text-white display-2">{{ player_name }}</h1>
+<h1 class="text-center text-white display-2"><b>{{ player_name }}</b></h1>
 <h5 class="text-center text-white display-5">Player Stats</h5>
 
 <!--First Row-->
@@ -28,7 +28,7 @@
   
   <!--Third row-->
   <div class="row bg-primary p-5">
-      <h1 class="text-center text-white display-2">Total picks: {{ total_picks }}</h1>
+      <h1 class="text-center text-white display-2"><b>Total picks: {{ total_picks }}</b></h1>
       {% if total_picks!= 0 %}
         <h3 class="text-center text-white display-5">{{player_name}} is in the following teams:</h3>
         {{ picks_table | safe }}

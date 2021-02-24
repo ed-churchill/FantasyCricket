@@ -3,7 +3,7 @@
 
 {% set index = column_name_indices.index(column_index)%}
 {% if index >= 0 %}
-href="{{link_columns_prefixes[index]}}/{{value.replace(' ', '-')}}"
+href="/{{link_columns_prefixes[index]}}/{{value.replace(' ', '-')}}"
 {% endif %}
 
 {% endif %}

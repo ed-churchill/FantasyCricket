@@ -119,7 +119,7 @@ def top_n_league_graph(n, league_df):
     data = [cumulative(x)[:-min_zeros] for x in data]
 
     # Style the graph 
-    graph = pygal.Line(style=style, margin=35)
+    graph = pygal.Line(style=style, margin=35, stroke_style={'width': 3})
     graph.title = f"Current Top {n} Tracker"
     graph.y_title = "Total Points"
     graph.x_labels = weeks

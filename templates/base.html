@@ -4,7 +4,10 @@
 <html>
 
 <head>
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.scss')}}">
+  <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.scss')}}"> -->
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"> -->
   <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
   <title>Fantasy Cricket</title>
 </head>
@@ -58,19 +61,22 @@
   <div class="container-fluid">
     <div class="row bg-dark text-center text-white p-3">
       <div class="col-lg p-3">
-          <img src="/static/images/facebook_logo.png" alt="fb logo">
+          <a href="https://www.facebook.com/uowmcc" target="_blank"><img src="/static/images/facebook_logo.png" alt="fb logo"></a>
           <p><a class="display-6" href="https://www.facebook.com/uowmcc" target="_blank">facebook.com.uowmcc</a></p>
       </div>
       <div class="col-lg p-3">
-          <img src="/static/images/instagram_logo.png" alt="insta logo">
+          <a href="https://www.instagram.com/uowmcc/" target="_blank"><img src="/static/images/instagram_logo.png" alt="insta logo" ></a>
           <p><a class="display-6" href="https://www.instagram.com/uowmcc/" target="_blank">instagram.com/uowmcc</a></p>
       </div>
       <div class="col-lg p-3">
-          <img src="/static/images/twitter_logo.png" alt="twitter logo">
+          <a href="https://twitter.com/UoWMCC" target="_blank"><img src="/static/images/twitter_logo.png" alt="twitter logo"></a>
           <p><a class="display-6" href="https://twitter.com/UoWMCC" target="_blank">twitter.com/UoWMCC</a></p>
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+      crossorigin="anonymous"></script>
   </body>
 
 </html>
