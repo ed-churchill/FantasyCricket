@@ -7,7 +7,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 
 def get_sheet():
-    """Function that returns the Google Sheet 'FantasyCricketPlayerStats'."""
+    """Function that returns the Google Sheet 'WarwickFantasyCricketPlayerStats'."""
 
     # Define the scope of the application
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/spreadsheets',
@@ -20,7 +20,7 @@ def get_sheet():
     client = gspread.authorize(creds)
 
     # Get the sheet
-    sheet = client.open('FantasyCricketPlayerStats')
+    sheet = client.open('WarwickFantasyCricketPlayerStats')
     return sheet
 
 
@@ -216,7 +216,7 @@ def name_to_index(name, sheet_names):
     """Function that checks if a given name is in a given list of names from the Google Sheet. Returns
     the index of the name in the sheet if it is found, prompts user input otherwise until the names match.
     :param name The name to check against the list of names in the sheet
-    :param sheet_names The list of names of the FantasyCricketPlayerStats Sheet"""
+    :param sheet_names The list of names of the WarwickFantasyCricketPlayerStats Sheet"""
 
     # Case where names match
     if name in sheet_names:

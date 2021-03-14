@@ -178,7 +178,7 @@ def initialize():
         client = gspread.authorize(creds)
 
         # Get the stats spreadsheets
-        sheet = client.open("FantasyCricketPlayerStats")
+        sheet = client.open("WarwickFantasyCricketPlayerStats")
 
         for i, sheet_name in enumerate(sheet_names):
             spreadsheet = sheet.get_worksheet(i)
@@ -190,7 +190,7 @@ def initialize():
             df.to_csv(os.path.join('data', f'{sheet_name}.csv'), index=False)
         
         # Get the FantasyCricketTeamSelection spreadsheet
-        team_selection_sheet = client.open('FantasyCricketTeamSelection')
+        team_selection_sheet = client.open('WarwickFantasyCricketTeamSelection')
         player_list = team_selection_sheet.get_worksheet(0)
 
         # Trim the FantasyCricketTeamSelection spreadsheet
